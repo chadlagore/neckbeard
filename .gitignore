@@ -1,0 +1,15 @@
+# Ignore everything
+*
+
+# Except the following
+!.gitignore
+!README.md
+!main.c
+!bluetooth.c
+!bluetooth.h
+!touch.c
+!touch.h
+!nios_system.c
+!nios_system.h
+!graphics.c
+!graphics.h
