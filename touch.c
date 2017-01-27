@@ -58,20 +58,20 @@ Point get_press(void) {
 
 	wait_for_touch();
 	printf("waited for touch\n");
-	WAIT_FOR_AR1100_STATUS
+	WAIT_FOR_TOUCH
 	printf("status enabled code to continue\n");
 	p1.x = AR1100_RX;
 
-	WAIT_FOR_AR1100_STATUS
+	WAIT_FOR_TOUCH
 
 	p1.x += AR1100_RX << 7;
 
-	WAIT_FOR_AR1100_STATUS
+	WAIT_FOR_TOUCH
 
 	p1.y = AR1100_RX;
 
-	WAIT_FOR_AR1100_STATUS
-	
+	WAIT_FOR_TOUCH
+
 	p1.y += AR1100_RX << 7;
 
 	p1.x = (int) ((p1.x) / 4090.0 * 800.0);
@@ -100,19 +100,19 @@ Point get_release(void){
 		}
 	}
 
-	WAIT_FOR_AR1100_STATUS
+	WAIT_FOR_TOUCH
 
 	p1.x = AR1100_RX;
 
-	WAIT_FOR_AR1100_STATUS
+	WAIT_FOR_TOUCH
 
 	p1.x += AR1100_RX << 7;
 
-	WAIT_FOR_AR1100_STATUS
+	WAIT_FOR_TOUCH
 
 	p1.y = AR1100_RX;
 
-	WAIT_FOR_AR1100_STATUS
+	WAIT_FOR_TOUCH
 
 	p1.y += AR1100_RX << 7;
 
