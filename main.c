@@ -5,12 +5,14 @@
 #include "touch.h"
 #include "bluetooth.h"
 #include "graphics.h"
+#include "gps.h"
 #include "altera_up_avalon_character_lcd.h"
 
 
 int main()
 {
-	test_touchscreen();
+	//test_touchscreen();
+	test_gps();
 	test();
 	Init_RS232();
 
