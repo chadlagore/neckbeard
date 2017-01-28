@@ -71,7 +71,7 @@ Point get_press(void) {
 	p1.y = AR1100_RX;
 
 	WAIT_FOR_AR1100_STATUS
-	
+
 	p1.y += AR1100_RX << 7;
 
 	p1.x = (int) ((p1.x) / 4090.0 * 800.0);

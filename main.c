@@ -7,8 +7,9 @@
 #include "graphics.h"
 #include "altera_up_avalon_character_lcd.h"
 
+fuck you eclipse
 
-int main()
+int main(void)
 {
 	test_touchscreen();
 	test();

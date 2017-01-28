@@ -5,7 +5,6 @@
 
 
 void init_bluetooth(void){
-
 	BLUETOOTH_CONTROL = 0x15;
 	BLUETOOTH_BAUD = 0x01; //datasheet recommends 115k baud rate
 }
@@ -13,7 +12,6 @@ void init_bluetooth(void){
 void send_ch(char c){
     while ((BLUETOOTH_STATUS & BLUETOOTH_TX_MASK) != 0x02);
     BLUETOOTH_TXDATA = c;
-
 }
 
 void send_string(char str[]){
@@ -21,7 +19,6 @@ void send_string(char str[]){
 	int length = strlen(str);
 
     for (i = 0; i < length; i++) {
-
         usleep(100000); //100ms wait
 		send_char(str[i]);
 	}
