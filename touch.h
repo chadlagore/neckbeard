@@ -14,7 +14,7 @@ typedef struct {
 #define AR1100_RX_MASK 0x01
 #define AR1100_TX_MASK 0x02
 
-#define WAIT_FOR_AR1100_STATUS  while(!(AR1100_RX_MASK & AR1100_STATUS));
+#define WAIT_FOR_TOUCH  while(!(AR1100_RX_MASK & AR1100_STATUS));
 
 void init_touch(void);
 void send_char(char c);
