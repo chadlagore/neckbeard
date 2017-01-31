@@ -11,15 +11,16 @@
 #define GPS_TX_MASK 0x02
 #define GPS_RX_MASK 0x01
 
-void send_char(char c);
-char receive_char(void);
+void gps_send_char(char c);
+char gps_receive_char(void);
 void packet_to_str(void);
 int check_GGA();
-void parse_packet(char packetStr[]);
+void parse_packet();
 int swap_endian(char *s);
 float convert_latitude(int x);
 float convert_longitude(int x);
-int utc_to_local(char *utc_time);
+void utc_to_local();
+void test_gps(void);
 
 void save_points(void);
 void config_log(void);

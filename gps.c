@@ -5,6 +5,7 @@
 #include <time.h>
 
 char packetStr[82]; //Max length of message
+
 char *utc_time;
 char *latitude;
 char *NS_indicator;
@@ -19,7 +20,7 @@ void init_gps(void) {
 	GPS_BAUD = 0x5;
 }
 
-void send_char(char c)
+void gps_send_char(char c)
 {
 	while(1)
 	{
@@ -30,7 +31,7 @@ void send_char(char c)
 	}
 }
 
-char receive_char(void){
+char gps_receive_char(void){
 
 	while(1)
 	{
@@ -43,9 +44,9 @@ char receive_char(void){
 }
 
 /* Store the packet recieved in an array*/
-void packet_to_str(void){
+void packet_to_str(){
 	while(1){ //keep checking for chars until new packet is read
-		char packetChar = receive_char();
+		char packetChar = gps_receive_char();
 		//Start of new packet
 		if(packetChar == '$'){
 			int i = 0;
@@ -56,7 +57,7 @@ void packet_to_str(void){
 					packetStr[i] = packetChar;
 					i++;
 				}
-				packetChar = receive_char();
+				packetChar = gps_receive_char();
 
 			}
 			//Append null to terminate the array
@@ -68,17 +69,19 @@ void packet_to_str(void){
 
 /* Verify that the packet is of type GPGGA */
 int check_GGA(){
+	int check = 0;
 	char *strPntr = packetStr;
 	char checkStr[82]; //bad practice to declare an array too long
 	//Store packet string in an array without brackets
-	for(int n = 0; *(strPntr + n) != ',' ; n++){
+	int n = 0;
+	for(n=0 ; *(strPntr + n) != ',' ; n++){
 		checkStr[n] = *(strPntr + n);
 	}
 	//Check that the packet begins with GPGGA
 	if(checkStr[3] == 'G' && checkStr[4] == 'G' && checkStr[5] == 'A'){
-		return 1;
+		check = 1;
 	}
-	return 0;
+	return check;
 }
 
 /* Stores each element of GPS data in an array (Problem: sometimes no data for
@@ -120,11 +123,42 @@ return tempString;
 
 /* Covert UTC timestamp to local time
 */
-int utc_to_local(char *utc_time){
-	
-	return 0;
+void utc_to_local(){
+	char * temp = utc_time;
+	int hours_h = (int) *temp;
+	int hours_l = (int) *temp++;
+	int minutes_h = (int) *temp +2;
+	int minutes_l = (int) *temp +3;
+	int seconds_h = (int) *temp +4;
+	int seconds_l = (int) *temp +5;
+
+	//Add 8 hours to UTC time for Vancouver time
+	int hours = (hours_h*10 + hours_l + 8) % 24;
+
+	hours_h = hours / 10;
+	hours_l = hours % 10;
+	printf("%d%d:%d%d:%d%d\n",hours_h, hours_l, minutes_h, minutes_l, seconds_h, seconds_l);
 }
 
+void test_gps(void){
+
+	printf("Testing the GPS...\n");
+	init_gps();
+	printf("GPS successfully initalized\n");
+
+	do{
+		printf("Read next Packet\n");
+		packet_to_str();
+	}while(!check_GGA);
+	printf("A GGA packet was recieved.\n");
+	parse_packet();
+	utc_to_local();
+	printf("Latitude: %s", latitude);
+	printf(" %s\n", NS_indicator);
+	printf("Longitude: %s", longitude);
+	printf(" %s", EW_indicator);
+
+}
 
 /* Functions for Data Logger
 int swap_endian(char *s){

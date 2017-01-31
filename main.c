@@ -4,7 +4,6 @@
 #include "nios_system.h"
 #include "touch.h"
 #include "bluetooth.h"
-#include "graphics.h"
 #include "gps.h"
 #include "altera_up_avalon_character_lcd.h"
 
@@ -16,41 +15,41 @@ int main()
 	test();
 	Init_RS232();
 
-	int i ;
+	//int i ;
 	printf("Hello from Nios II!\n");
 
 
-	alt_up_character_lcd_dev * char_lcd_dev;
+	//alt_up_character_lcd_dev * char_lcd_dev;
 
 	/* open the Character LCD port */
-	char_lcd_dev = alt_up_character_lcd_open_dev ("/dev/character_lcd_0");
+	//char_lcd_dev = alt_up_character_lcd_open_dev ("/dev/character_lcd_0");
 
-	if ( char_lcd_dev == NULL)
-		alt_printf ("Error: could not open character LCD device\n");
-	else
-		alt_printf ("Opened character LCD device\n");
+	//if ( char_lcd_dev == NULL)
+		//alt_printf ("Error: could not open character LCD device\n");
+	//else
+		//alt_printf ("Opened character LCD device\n");
 
 	/* Initialize the character display */
-	alt_up_character_lcd_init (char_lcd_dev);
+	//alt_up_character_lcd_init (char_lcd_dev);
 
 	/* Write "Welcome to" in the first row */
-	alt_up_character_lcd_string(char_lcd_dev, "Devin Meckling");
+	//alt_up_character_lcd_string(char_lcd_dev, "Devin Meckling");
 
 	/* Write "the DE2 board" in the second row */
-	char second_row[] = "hates quartus\0";
+	//char second_row[] = "hates quartus\0";
 
-	alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 1);
-	alt_up_character_lcd_string(char_lcd_dev, second_row);
+	//alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 1);
+	//alt_up_character_lcd_string(char_lcd_dev, second_row);
 
 	/* draw a line across the screen in RED at y coord 100 and from x = 0 to 799 */
-	for(i = 0; i < 800; i ++) {
-		WriteAPixel(i, 100, RED);
-	}
+	//for(i = 0; i < 800; i ++) {
+		//WriteAPixel(i, 100, RED);
+	//}
 
 	/* read the pixels back and make sure we read 2 (RED) to prove it's working */
-	for(i = 0; i < 800; i ++) {
-		printf("Colour value (i.e. pallette number) = %d at [%d, 100]\n", ReadAPixel(i, 100), i);
-	}
+	//for(i = 0; i < 800; i ++) {
+		//printf("Colour value (i.e. pallette number) = %d at [%d, 100]\n", ReadAPixel(i, 100), i);
+	//}
 
 	return 0;
 }
