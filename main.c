@@ -6,9 +6,13 @@
 #include "bluetooth.h"
 #include "graphics.h"
 #include "wifi.h"
+#include "gps.h"
+#include "distance.h"
 #include "altera_up_avalon_character_lcd.h"
 
-int main(void) {
+
+int main()
+{
 	printf("Hello from Nios II!\n");
 
 	// /* open the Character LCD port */
@@ -43,17 +47,11 @@ int main(void) {
 	printf("Initializing wifi... ");
 	init_wifi();
 
-	const char *wifi_message = "print(\"hello world\")\0";
+	const char *wifi_message = "dofile(\"init.lua\")\0";
+
 	printf("Sending %s to wifi\n", wifi_message);
+	WAIT_FOR_READY
 	sendstring_wifi(wifi_message);
-
-	printf("Recieving message from wifi:\n");
-
-
-	int i;
-	for (i = 0; i < 10000; i++) {
-		printf("%s", (char) getchar_wifi());
-	}
 
 	return 0;
 }

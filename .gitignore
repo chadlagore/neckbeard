@@ -15,3 +15,5 @@
 !graphics.h
 !wifi.c
 !wifi.h
+!gps.c
+!gps.h
