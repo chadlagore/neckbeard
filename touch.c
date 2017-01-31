@@ -15,9 +15,9 @@ void init_touch(void) {
 	usleep(5000);
 
 	//touch_enable sequence
-	send_char(0x55);
-	send_char(0x01);
-	send_char(0x12);
+	sendchar_touch(0x55);
+	sendchar_touch(0x01);
+	sendchar_touch(0x12);
 
 	usleep(5000);
 
@@ -29,7 +29,7 @@ void init_touch(void) {
  *
  * @param c a char value
  */
-void send_char(char c){
+void sendchar_touch(char c){
 	while ((AR1100_STATUS & AR1100_TX_MASK) != 0x02);
 	AR1100_TX = c;
 }
@@ -58,19 +58,19 @@ Point get_press(void) {
 
 	wait_for_touch();
 	printf("waited for touch\n");
-	WAIT_FOR_AR1100_STATUS
+	WAIT_FOR_TOUCH
 	printf("status enabled code to continue\n");
 	p1.x = AR1100_RX;
 
-	WAIT_FOR_AR1100_STATUS
+	WAIT_FOR_TOUCH
 
 	p1.x += AR1100_RX << 7;
 
-	WAIT_FOR_AR1100_STATUS
+	WAIT_FOR_TOUCH
 
 	p1.y = AR1100_RX;
 
-	WAIT_FOR_AR1100_STATUS
+	WAIT_FOR_TOUCH
 
 	p1.y += AR1100_RX << 7;
 
@@ -100,19 +100,19 @@ Point get_release(void){
 		}
 	}
 
-	WAIT_FOR_AR1100_STATUS
+	WAIT_FOR_TOUCH
 
 	p1.x = AR1100_RX;
 
-	WAIT_FOR_AR1100_STATUS
+	WAIT_FOR_TOUCH
 
 	p1.x += AR1100_RX << 7;
 
-	WAIT_FOR_AR1100_STATUS
+	WAIT_FOR_TOUCH
 
 	p1.y = AR1100_RX;
 
-	WAIT_FOR_AR1100_STATUS
+	WAIT_FOR_TOUCH
 
 	p1.y += AR1100_RX << 7;
 

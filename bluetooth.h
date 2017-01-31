@@ -12,13 +12,14 @@
 #define BLUETOOTH_RX_MASK 0x01
 
 void init_bluetooth(void);
-void send_ch(char c);
-void send_string(char str[]);
+void sendchar_bluetooth(char c);
+void sendstring_bluetooth(char str[]);
 void command_mode(void);
 void data_mode(void);
 
 void reset_bluetooth(void);
 void set_name(char name[]);
 void set_pw(char pw[]);
+void test_bluetooth();
 
 #endif /* _BLUETOOTH_H_ */
