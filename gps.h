@@ -4,9 +4,9 @@
 // Define bluetooth control registers
 #define GPS_STATUS   (*(volatile unsigned char *)(0x84000210))
 #define GPS_CONTROL  (*(volatile unsigned char *)(0x84000210))
-#define GPS_TXDATA   (*(volatile unsigned char *)(0x84000212)) //Not sure
-#define GPS_RXDATA   (*(volatile unsigned char *)(0x84000212)) //which is which
-#define GPS_BAUD     (*(volatile unsigned char *)(0x84000214)) //provided
+#define GPS_TXDATA   (*(volatile unsigned char *)(0x84000212))
+#define GPS_RXDATA   (*(volatile unsigned char *)(0x84000212))
+#define GPS_BAUD     (*(volatile unsigned char *)(0x84000214))
 
 #define GPS_TX_MASK 0x02
 #define GPS_RX_MASK 0x01
@@ -14,18 +14,12 @@
 void gps_send_char(char c);
 char gps_receive_char(void);
 void packet_to_str(void);
-int check_GGA();
-void parse_packet();
+int check_GGA(void);
+void parse_packet(void);
 int swap_endian(char *s);
 float convert_latitude(int x);
 float convert_longitude(int x);
-void utc_to_local();
+void utc_to_local(void);
 void test_gps(void);
 
-void save_points(void);
-void config_log(void);
-void start_log(void);
-void stop_log(void);
-void erase_log(void);
-
-#endif // GPS_H_
+#endif /* GPS_H_ */
