@@ -16,18 +16,18 @@ char *checksum;
 
 void init_gps(void) {
 	GPS_CONTROL = 0x15;
-	GPS_BAUD = 0x5;
+	GPS_BAUD = 0x7;
 }
 
 void gps_send_char(char c) {
 	/* Wait until GPS is ready to receive next char */
-	while ((GPS_STATUS & GPS_TX_MASK) != 0x02);
+	while ((GPS_STATUS & GPS_TX_MASK) != 0x2);
 	GPS_TXDATA = c;
 }
 
 char gps_receive_char(void) {
 	/* Wait until GPS has sent data */
-	while ((GPS_STATUS & GPS_RX_MASK) != 0x01);
+	while ((GPS_STATUS & GPS_RX_MASK) != 0x1);
 	return GPS_RXDATA;
 }
 
@@ -52,6 +52,7 @@ void packet_to_str() {
 			}
 			/* Append null to terminate the array */
 			packetStr[i++] = '\0';
+			break;
 		}
 	}
 }
@@ -118,6 +119,7 @@ void test_gps() {
 	do {
 		printf("Read next Packet\n");
 		packet_to_str();
+		printf("Packet contents: %s\n", packetStr);
 	} while(!check_GGA());
 
 	printf("A GGA packet was recieved.\n");
@@ -126,29 +128,3 @@ void test_gps() {
 	printf("Latitude: %s %s\n", latitude, NS_indicator);
 	printf("Longitude: %s %s\n", longitude, EW_indicator);
 }
-
-/* Functions for Data Logger
-int swap_endian(char *s){
-register int val;
-val = strtoul(s, NULL, 16) ; // convert to 4 byte int form in base 16
-val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF );
-val = (val << 16) | ((val >> 16) & 0xFFFF);
-return val ;
-}
-
-float convert_latitude(int x){
-static char buff[100] ;
-float *ptr = (float *)(&x) ; // cast int to float
-float f = *ptr ; // get the float
-sprintf(buff, "%2.4f", f); // write in string to an array
-return buff ;
-}
-
-float convert_longitude(int x){
-static char buff[100] ;
-float *ptr = (float *)(&x) ;
-float f = *ptr ;
-sprintf(buff, "%3.4f", f);
-return buff ;
-}
-*/

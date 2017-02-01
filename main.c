@@ -10,9 +10,7 @@
 
 int main()
 {
-	//test_touchscreen();
 	test_gps();
-	test();
 	Init_RS232();
 
 	//int i ;
