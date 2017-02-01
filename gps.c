@@ -6,7 +6,7 @@
 
 char packetStr[82]; //Max length of message
 
-char *;
+char *utc_time;
 char *latitude;
 char *NS_indicator;
 char *longitude;
@@ -94,7 +94,7 @@ void parse_packet(){
  * Covert UTC timestamp to local time
  */
 void utc_to_local() {
-	char *temp = ;
+	char *temp = utc_time;
 	int hours_h = (int) *temp;
 	int hours_l = (int) *temp+1;
 	int minutes_h = (int) *temp +2;
