@@ -7,8 +7,8 @@
 #define WIFI_RX          (*(volatile unsigned char *)(0x84000242))
 #define WIFI_BAUD        (*(volatile unsigned char *)(0x84000244))
 
-/* This must be called before commands can be send to the wifi chip */
-#define WAIT_FOR_READY   while (getchar_wifi() != '>');
+/* This must be called before commands can be sent to the wifi chip */
+#define WAIT_FOR_WIFI_READY   while (getchar_wifi() != '>');
 
 /* Set baud rate to 115k */
 void init_wifi(void);

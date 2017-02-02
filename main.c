@@ -10,48 +10,66 @@
 #include "distance.h"
 #include "altera_up_avalon_character_lcd.h"
 
+/*
+ * A package containing data to be sent to the server
+ * num_cars: the number of cars that have passed since the last
+ 				  packet was sent
+ * latitude: the device's latitude
+ * longitude: the device's longitude
+ * pst: the pacific standard time at which this package was sent
+ * time_span: the number of seconds over whidh the data in this package was collected
+ */
+struct package {
+	int num_cars;
+	float latitude;
+	float longitude;
+	char *pst;
+	int time_span;
+};
 
-int main()
-{
-	printf("Hello from Nios II!\n");
+/*
+ * Convert the packet to a JSON string to be
+ * sent to the server
+ */
+char *package_to_str(struct package *pkg) {
+	char *json_str = malloc(sizeof(char)*80);
+	char *base_str = "{\"num_cars\" :     , \"latitude\" :          , \"PST\" :         , \"time_span\" :     }";
+	char *num_chars_label = "{\"num_cars\" : ";
+	char *latitude_label = ", \"latitude\" : ";
 
-	// /* open the Character LCD port */
-	// alt_up_character_lcd_dev * char_lcd_dev = alt_up_character_lcd_open_dev ("/dev/character_lcd_0");
-	// if ( char_lcd_dev == NULL) {
-	// 	printf ("Error: could not open character LCD device\n");
-	// } else {
-	// 	printf ("Opened character LCD device\n");
-	// }
-	//
-	// /* Initialize the character display */
-	// alt_up_character_lcd_init (char_lcd_dev);
-	//
-	// /* Write "Devin Meckling" in the first row */
-	// alt_up_character_lcd_string(char_lcd_dev, "Devin Meckling");
-	//
-	// /* Write "hates quartus" in the second row */
-	// char second_row[] = "hates quartus\0";
-	// alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 1);
-	// alt_up_character_lcd_string(char_lcd_dev, second_row);
+	/* Fill in values in the base JSON string using package data */
+	int i;
+	for (i = 0; i < 80; i++) {
+		/* If we are not looking at a colon just copy it to the JSON string */
+		if (base_str[i] != ':') {
+			json_str[i] = base_str[i];
+		}
+		/* Otherwise we need to insert the data */
+		else {
+			// sprintf(str, "%d", aInt);
+		}
+	}
+}
 
-	// /* draw a line across the screen in RED at y coord 100 and from x = 0 to 799 */
-	// for(i = 0; i < 800; i ++) {
-	// 	WriteAPixel(i, 100, RED);
-	// }
-	//
-	// /* read the pixels back and make sure we read 2 (RED) to prove it's working */
-	// for(i = 0; i < 800; i ++) {
-	// 	printf("Colour value (i.e. pallette number) = %d at [%d, 100]\n", ReadAPixel(i, 100), i);
-	// }
+int main() {
+	printf("Data boys lets go!\n");
 
-	printf("Initializing wifi... ");
+	/* Initialize everyting! */
+	init_gps();
 	init_wifi();
+	init_touch();
+	init_distance();
+	init_bluetooth();
 
-	const char *wifi_message = "dofile(\"init.lua\")\0";
+	/* Inifitely loop and get data */
+	while (1) {
 
-	printf("Sending %s to wifi\n", wifi_message);
-	WAIT_FOR_READY
-	sendstring_wifi(wifi_message);
+		/* If the distance sensor is ready to send data to the server send it */
+		int *
+		if (get_distance_data()) {
+
+		}
+	}
 
 	return 0;
 }
