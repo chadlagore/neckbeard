@@ -17,3 +17,7 @@
 !wifi.h
 !gps.c
 !gps.h
+!package.h
+!package.c
+!distance.h
+!distance.c
