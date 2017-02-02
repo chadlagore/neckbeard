@@ -45,10 +45,24 @@ int screen_touched(void){
 	return 0;
 }
 
+int screen_release(void){
+	if (AR1100_RX_MASK & AR1100_STATUS) {
+		if ((AR1100_RX & 0x80) == 0x80) {
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
 
 void wait_for_touch(){
-	printf("Waiting for screen to be untouched\n");
+	//printf("Waiting for screen to be untouched\n");
 	while(!screen_touched());
+}
+
+void wait_for_release(){
+	while(!screen_release());
 }
 
 
@@ -57,9 +71,9 @@ Point get_press(void) {
 	Point p1;
 
 	wait_for_touch();
-	printf("waited for touch\n");
+	//printf("waited for touch\n");
 	WAIT_FOR_TOUCH
-	printf("status enabled code to continue\n");
+	//printf("status enabled code to continue\n");
 	p1.x = AR1100_RX;
 
 	WAIT_FOR_TOUCH
@@ -133,7 +147,14 @@ void test_touchscreen(void){
 	while(1){
 		Point indicator = get_press();
 
-		printf("Where did the bad man touch you?\n");
-		printf("He touched me at: (%d, %d)\n", indicator.x, indicator.y);
+		printf("Touched at: (%d, %d)\n", indicator.x, indicator.y);
+
+		wait_for_release();
+
+		Point indicator2 = get_release();
+
+		printf("Released at: (%d, %d) \n", indicator2.x, indicator2.y);
+
+		WAIT_FOR_TOUCH
 	}
 }

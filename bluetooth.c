@@ -16,6 +16,15 @@ void send_ch(char c){
 
 }
 
+void wait_for_read(void){
+	while(!(BLUETOOTH_STATUS & 0x01));
+}
+
+char get_char(void){
+	while ((BLUETOOTH_STATUS & BLUETOOTH_RX_MASK) != 0x01);
+	return BLUETOOTH_RXDATA;
+}
+
 void send_string(char str[]){
     int i;
 	int length = strlen(str);
@@ -32,6 +41,14 @@ void command_mode(void){
 	usleep(1000000); // 1s wait
 	send_string("$$$");
 	usleep(1000000);
+
+	// Print "OK" if successful
+	wait_for_read();
+	char O = get_char();
+	printf("%c", O);
+	wait_for_read();
+	char K = get_char();
+	printf("%c\n", K);
 }
 
 void data_mode(void) {

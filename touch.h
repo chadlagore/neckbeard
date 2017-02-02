@@ -19,7 +19,9 @@ typedef struct {
 void init_touch(void);
 void send_char(char c);
 int screen_touched(void);
+int screen_release(void);
 void wait_for_touch();
+void wait_for_release();
 Point get_press(void);
 Point get_release(void);
 
