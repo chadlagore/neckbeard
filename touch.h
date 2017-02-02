@@ -17,7 +17,7 @@ typedef struct {
 #define WAIT_FOR_TOUCH  while(!(AR1100_RX_MASK & AR1100_STATUS));
 
 void init_touch(void);
-void send_char(char c);
+void sendchar_touch(char c);
 int screen_touched(void);
 int screen_release(void);
 void wait_for_touch();

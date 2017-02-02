@@ -5,17 +5,16 @@
 
 
 void init_bluetooth(void){
-
 	BLUETOOTH_CONTROL = 0x15;
 	BLUETOOTH_BAUD = 0x01; //datasheet recommends 115k baud rate
 }
 
-void send_ch(char c){
+void sendchar_bluetooth(char c){
     while ((BLUETOOTH_STATUS & BLUETOOTH_TX_MASK) != 0x02);
     BLUETOOTH_TXDATA = c;
-
 }
 
+<<<<<<< HEAD
 void wait_for_read(void){
 	while(!(BLUETOOTH_STATUS & 0x01));
 }
@@ -26,20 +25,20 @@ char get_char(void){
 }
 
 void send_string(char str[]){
+
     int i;
 	int length = strlen(str);
 
     for (i = 0; i < length; i++) {
-
         usleep(100000); //100ms wait
-		send_char(str[i]);
+		sendchar_bluetooth(str[i]);
 	}
 }
 
 void command_mode(void){
     printf("Entering Command Mode...\n");
 	usleep(1000000); // 1s wait
-	send_string("$$$");
+	sendstring_bluetooth("$$$");
 	usleep(1000000);
 
 	// Print "OK" if successful
@@ -54,34 +53,34 @@ void command_mode(void){
 void data_mode(void) {
     printf("Entering Data Mode...\n");
 	usleep(1000000); // 1s wait
-	send_string("---\r\n");
+	sendstring_bluetooth("---\r\n");
 	usleep(1000000);
 }
 
 void reset_bluetooth(void) {
 	command_mode();
-	send_string("SF,");
-	send_string("1\r\n");
+	sendstring_bluetooth("SF,");
+	sendstring_bluetooth("1\r\n");
 	data_mode();
 }
 
 void set_name(char name[]) {
 	command_mode();
-	send_string("SN,");
-	send_string(name);
-	send_string("\r\n");
+	sendstring_bluetooth("SN,");
+	sendstring_bluetooth(name);
+	sendstring_bluetooth("\r\n");
 	data_mode();
 }
 
 void set_pw(char pw[]) {
 	command_mode();
-	send_string("SP,");
-	send_string(pw);
-	send_string("\r\n");
+	sendstring_bluetooth("SP,");
+	sendstring_bluetooth(pw);
+	sendstring_bluetooth("\r\n");
 	data_mode();
 }
 
-void test(void) {
+void test_bluetooth(void) {
     printf("Testing Bluetooth...\n");
     init_bluetooth();
     printf("Connection established...\n");

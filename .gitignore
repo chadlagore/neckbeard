@@ -13,5 +13,7 @@
 !nios_system.h
 !graphics.c
 !graphics.h
+!wifi.c
+!wifi.h
 !gps.c
 !gps.h
