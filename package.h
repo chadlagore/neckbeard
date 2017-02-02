@@ -12,8 +12,8 @@
  */
 struct package {
 	int num_cars;
-	float latitude;
-	float longitude;
+	char *latitude;
+	char *longitude;
 	char *pst;
 	int time_span;
 };

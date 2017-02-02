@@ -4,16 +4,6 @@
 #include <unistd.h>
 #include <time.h>
 
-char packetStr[82]; //Max length of message
-
-char *utc_time;
-char *latitude;
-char *NS_indicator;
-char *longitude;
-char *EW_indicator;
-char *satelites_used;
-char *checksum;
-
 void init_gps(void) {
 	GPS_CONTROL = 0x15;
 	GPS_BAUD = 0x7;
@@ -32,9 +22,9 @@ char gps_receive_char(void) {
 }
 
 /*
- * Store the packet recieved in an array
+ * Store the packet recieved in pack->packetStr
  */
-void packet_to_str() {
+void receive_packet(struct gps_packet *pack) {
 	/* keep checking for chars until new packet is read */
 	while (1) {
 		char packet_char = gps_receive_char();
@@ -45,13 +35,13 @@ void packet_to_str() {
 			while (packet_char != '\r'){
 				/* Check that data is valid */
 				if (packet_char != '\0') {
-					packetStr[i] = packet_char;
+					pack->packetStr[i] = packet_char;
 					i++;
 				}
 				packet_char = gps_receive_char();
 			}
 			/* Append null to terminate the array */
-			packetStr[i++] = '\0';
+			pack->packetStr[i++] = '\0';
 			break;
 		}
 	}
@@ -60,9 +50,11 @@ void packet_to_str() {
 /*
  * Verify that the packet is of type GPGGA
  */
-int check_GGA() {
+int is_GGA(struct gps_packet *pack) {
 	/* Check that the packet begins with GPGGA */
-	return (packetStr[3] == 'G' && packetStr[4] == 'G' && packetStr[5] == 'A');
+	return (pack->packetStr[3] == 'G'
+		&& pack->packetStr[4] == 'G'
+		&& pack->packetStr[5] == 'A');
 }
 
 /*
@@ -70,11 +62,11 @@ int check_GGA() {
  * a particular element, can't pass a NULL into an array..
  * loose uniformity of indices)
  */
-void parse_packet(){
+void parse_packet(struct gps_packet *pack) {
 	/* total number of tokens in GPGGA packet - excluding <CR> */
 	char **tokens[15];
 	int i = 0;
-	char *token = strtok(packetStr, ",");
+	char *token = strtok(pack->packetStr, ",");
 
 	for (i = 0; token != NULL; i++) {
 		tokens[i] = token;
@@ -82,20 +74,21 @@ void parse_packet(){
 	}
 
 	/* get tokens */
-	utc_time = tokens[1]; //starts at 1 because 0 will be $GPGGA
-	latitude = tokens[2];
-	NS_indicator = tokens[3];
-	longitude = tokens[4];
-	EW_indicator = tokens[5];
-	satelites_used = tokens [7];
-	checksum = tokens[14];
+	pack->utc_time = tokens[1]; //starts at 1 because 0 will be $GPGGA
+	pack->latitude = tokens[2];
+	pack->NS_indicator = tokens[3];
+	pack->longitude = tokens[4];
+	pack->EW_indicator = tokens[5];
+	pack->satelites_used = tokens [7];
+	pack->checksum = tokens[14];
 }
 
 /*
- * Covert UTC timestamp to local time
+ * Covert UTC timestamp to local time and return it
+ * in string format
  */
-void utc_to_local() {
-	char *temp = utc_time;
+char *utc_to_local(struct gps_packet *pack) {
+	char *temp = pack->utc_time;
 	int hours_h = (int) *temp;
 	int hours_l = (int) *temp+1;
 	int minutes_h = (int) *temp +2;
@@ -105,26 +98,18 @@ void utc_to_local() {
 
 	/* Add 8 hours to UTC time for Vancouver time */
 	int hours = (hours_h*10 + hours_l + 8) % 24;
-
 	hours_h = hours / 10;
 	hours_l = hours % 10;
-	printf("%d%d:%d%d:%d%d\n", hours_h, hours_l, minutes_h, minutes_l, seconds_h, seconds_l);
+
+	sprintf(pack->local_time, "%d%d:%d%d:%d%d", hours_h, hours_l, minutes_h, minutes_l, seconds_h, seconds_l);
+	return pack->local_time;
 }
 
-void test_gps() {
-	printf("Testing the GPS...\n");
-	init_gps();
-	printf("GPS successfully initalized\n");
-
+void get_gps_data(struct gps_packet *pack) {
 	do {
-		printf("Read next Packet\n");
-		packet_to_str();
-		printf("Packet contents: %s\n", packetStr);
-	} while(!check_GGA());
+		receive_packet(pack);
+	} while(!check_GGA(pack));
 
-	printf("A GGA packet was recieved.\n");
-	parse_packet();
-	utc_to_local();
-	printf("Latitude: %s %s\n", latitude, NS_indicator);
-	printf("Longitude: %s %s\n", longitude, EW_indicator);
+	parse_packet(pack);
+	utc_to_local(pack);
 }
