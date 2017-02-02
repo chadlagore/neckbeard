@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "graphics.h"
 
-#include "OutGraphicsCharFont2.c"
+#include "OutGraphicsCharFont2.h"
 
 void TestHLine(int x1, int y1, int length, int Colour);
 void TestVLine(int x1, int y1, int length, int Colour);

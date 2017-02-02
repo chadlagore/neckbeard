@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "graphics.h"
 
-#include "OutGraphicsCharFont2.c"
+#include "OutGraphicsCharFont2.h"
 
 /**
  * Draw a circle (one pixel at a time)
