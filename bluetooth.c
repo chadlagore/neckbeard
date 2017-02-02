@@ -14,7 +14,6 @@ void sendchar_bluetooth(char c){
     BLUETOOTH_TXDATA = c;
 }
 
-<<<<<<< HEAD
 void wait_for_read(void){
 	while(!(BLUETOOTH_STATUS & 0x01));
 }
