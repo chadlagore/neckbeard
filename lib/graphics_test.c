@@ -2,10 +2,7 @@
  * A test suite for the graphics library.
  */
 
-#include <stdio.h>
-#include "graphics.h"
-
-#include "OutGraphicsCharFont2.h"
+#include "graphics_test.h"
 
 /**
  * Draw a circle (one pixel at a time)
