@@ -8,6 +8,10 @@
 #define GPS_RXDATA   (*(volatile unsigned char *)(0x84000212))
 #define GPS_BAUD     (*(volatile unsigned char *)(0x84000214))
 
+#define HEX0_1       (volatile unsigned char *) (0x2030)
+#define HEX2_3		 (volatile unsigned char *) (0x2040)
+#define HEX4_5 	     (volatile unsigned char *) (0x2050)
+
 #define GPS_TX_MASK 0x02
 #define GPS_RX_MASK 0x01
 
@@ -36,7 +40,7 @@ void gps_send_char(char c);
 char gps_receive_char(void);
 
 struct gps_packet *gps_packet_create(void);
-void get_gps_data(struct gps_packet *pack);
+void udpate_gps_data(struct gps_packet *pack);
 void receive_packet(struct gps_packet *pack);
 int is_GGA(struct gps_packet *pack);
 void parse_packet(struct gps_packet *pack);

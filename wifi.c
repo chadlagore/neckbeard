@@ -29,3 +29,17 @@ void sendstring_wifi(const char *string) {
     putchar_wifi('\n');
     putchar_wifi('\r');
 }
+
+void receivestring_wifi(char *buffer, int buffer_len, char start_char, char end_char) {
+    char char_received = 'a';
+    int i;
+
+    /* Wait for special command delimiter to start recording */
+    while (getchar_wifi() != start_char);
+
+    for (i = 0; i < buffer_len && char_received != end_char; i++) {
+        buffer[i] = char_received = getchar_wifi();
+    }
+
+    buffer[i] = '\0';
+}

@@ -22,4 +22,10 @@ char getchar_wifi(void);
 /* Send string to wifi (string must be '\0' terminated) */
 void sendstring_wifi(const char *string);
 
+/*
+ * Fill to_fill with wifi output up to its buffer_len
+ * only copies in data after the delimiter
+ */
+void receivestring_wifi(char *buffer, int buffer_len, char start_char, char end_char);
+
 #endif /* _WIFI_H_ */

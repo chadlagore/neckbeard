@@ -27,16 +27,7 @@ char gps_receive_char(void) {
  */
 struct gps_packet *gps_packet_create() {
 	struct gps_packet *packet = malloc(sizeof(struct gps_packet));
-
 	packet->packetStr = malloc(sizeof(char)*MAX_PACKET_LENGTH);
-	packet->utc_time = malloc(sizeof(char)*UTC_TIME_LENGTH);
-	packet->local_time = malloc(sizeof(char)*UTC_TIME_LENGTH);
-	packet->latitude = malloc(sizeof(char)*LATITUDE_LENGTH);
-	packet->NS_indicator = malloc(sizeof(char)*INDICATOR_LENGTH);
-	packet->longitude = malloc(sizeof(char)*LONGITUDE_LENGTH);
-	packet->EW_indicator = malloc(sizeof(char)*INDICATOR_LENGTH);
-	packet->satelites_used = malloc(sizeof(char)*SATS_USED_LENGTH);
-	packet->checksum = malloc(sizeof(char)*CHECKSUM_LENGTH);
 
 	return packet;
 }
@@ -44,7 +35,7 @@ struct gps_packet *gps_packet_create() {
 /*
  * Store the packet recieved in pack->packetStr
  */
-void receive_packet(struct gps_packet *pack) {
+void receive_packet(struct gps_packet *pkt) {
 	/* keep checking for chars until new packet is read */
 	while (1) {
 		char packet_char = gps_receive_char();
@@ -55,13 +46,13 @@ void receive_packet(struct gps_packet *pack) {
 			while (packet_char != '\r'){
 				/* Check that data is valid */
 				if (packet_char != '\0') {
-					pack->packetStr[i] = packet_char;
+					pkt->packetStr[i] = packet_char;
 					i++;
 				}
 				packet_char = gps_receive_char();
 			}
 			/* Append null to terminate the array */
-			pack->packetStr[i++] = '\0';
+			pkt->packetStr[i] = '\0';
 			break;
 		}
 	}
@@ -70,11 +61,11 @@ void receive_packet(struct gps_packet *pack) {
 /*
  * Verify that the packet is of type GPGGA
  */
-int is_GGA(struct gps_packet *pack) {
+int is_GGA(struct gps_packet *pkt) {
 	/* Check that the packet begins with GPGGA */
-	return (pack->packetStr[3] == 'G'
-		&& pack->packetStr[4] == 'G'
-		&& pack->packetStr[5] == 'A');
+	return (pkt->packetStr[3] == 'G'
+		&& pkt->packetStr[4] == 'G'
+		&& pkt->packetStr[5] == 'A');
 }
 
 /*
@@ -82,11 +73,11 @@ int is_GGA(struct gps_packet *pack) {
  * a particular element, can't pass a NULL into an array..
  * loose uniformity of indices)
  */
-void parse_packet(struct gps_packet *pack) {
+void parse_packet(struct gps_packet *pkt) {
 	/* total number of tokens in GPGGA packet - excluding <CR> */
 	char **tokens[15];
 	int i = 0;
-	char *token = strtok(pack->packetStr, ",");
+	char *token = strtok(pkt->packetStr, ",");
 
 	for (i = 0; token != NULL; i++) {
 		tokens[i] = token;
@@ -94,21 +85,21 @@ void parse_packet(struct gps_packet *pack) {
 	}
 
 	/* get tokens */
-	pack->utc_time = tokens[1]; //starts at 1 because 0 will be $GPGGA
-	pack->latitude = tokens[2];
-	pack->NS_indicator = tokens[3];
-	pack->longitude = tokens[4];
-	pack->EW_indicator = tokens[5];
-	pack->satelites_used = tokens [7];
-	pack->checksum = tokens[14];
+	pkt->utc_time = tokens[1]; //starts at 1 because 0 will be $GPGGA
+	pkt->latitude = tokens[2];
+	pkt->NS_indicator = tokens[3];
+	pkt->longitude = tokens[4];
+	pkt->EW_indicator = tokens[5];
+	pkt->satelites_used = tokens[7];
+	pkt->checksum = tokens[14];
 }
 
 /*
  * Covert UTC timestamp to local time and return it
  * in string format
  */
-char *utc_to_local(struct gps_packet *pack) {
-	char *temp = pack->utc_time;
+char *utc_to_local(struct gps_packet *pkt) {
+	char *temp = pkt->utc_time;
 	int hours_h = (int) *temp;
 	int hours_l = (int) *temp+1;
 	int minutes_h = (int) *temp +2;
@@ -121,15 +112,21 @@ char *utc_to_local(struct gps_packet *pack) {
 	hours_h = hours / 10;
 	hours_l = hours % 10;
 
-	sprintf(pack->local_time, "%d%d:%d%d:%d%d", hours_h, hours_l, minutes_h, minutes_l, seconds_h, seconds_l);
-	return pack->local_time;
+	/* Write the values to the hex displays */
+	*HEX4_5 = (hours_h << 4) | hours_l;
+	*HEX2_3 = (minutes_h << 4) | minutes_l;
+	*HEX0_1 = (seconds_h << 4) | seconds_l;
+
+	sprintf(pkt->local_time, "%d%d:%d%d:%d%d", hours_h, hours_l, minutes_h, minutes_l, seconds_h, seconds_l);
+	return pkt->local_time;
 }
 
-void get_gps_data(struct gps_packet *pack) {
+void udpate_gps_data(struct gps_packet *pkt) {
 	do {
-		receive_packet(pack);
-	} while(!is_GGA(pack));
-
-	parse_packet(pack);
-	utc_to_local(pack);
+		receive_packet(pkt);
+		printf("Packet str: %s\n", pkt->packetStr);
+	} while(!is_GGA(pkt));
+	printf("Parsing packet\n");
+	parse_packet(pkt);
+	utc_to_local(pkt);
 }

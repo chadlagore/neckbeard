@@ -14,39 +14,70 @@
 #include "Fill.h"
 #include "altera_up_avalon_character_lcd.h"
 
-int main() {
-	printf("Data boys lets go!\n");
-
-	/* Initialize everyting! */
+static void test_gps() {
+	printf("Starting GPS test\n");
 	init_gps();
-	init_wifi();
-	init_touch();
-	// init_distance();
 
-	struct package *pkg = pkg_create();
 	struct gps_packet *gps_pkt = gps_packet_create();
-	clock_t data_start_time = clock();
+	udpate_gps_data(gps_pkt);
+	printf("GPS Data: %s\n", gps_pkt->packetStr);
 
+	printf("Done GPS test\n");
+}
+
+static void test_wifi() {
+	printf("Starting Wifi test\n");
+	init_wifi();
+
+	int buf_len = 500;
+	char *buffer = malloc(sizeof(char)*buf_len);
+	sendstring_wifi("print('hello world');");
+	receivestring_wifi(buffer, buf_len, ';', '\n');
+
+	printf("Wifi Data: %s\n", buffer);
+	free(buffer);
+
+	printf("Done Wifi test\n");
+}
+
+
+int main() {
+	/* Run tests */
+	test_wifi();
+	test_gps();
+
+	// printf("Data boys lets go!\n");
+	//
+	// /* Initialize everyting! */
+	// init_gps();
+	// init_wifi();
+	// init_touch();
+	// // init_distance();
+	//
+	// struct package *pkg = pkg_create();
+	// struct gps_packet *gps_pkt = gps_packet_create();
+	// clock_t data_start_time = clock();
+	//
 	/* Inifitely loop and get data */
-	while (1) {
-		/* If the distance sensor is ready to send data to the server */
-		if (rand() % 100 <= 1) {
-			get_gps_data(gps_pkt);
-
-			/* Fill package with data */
-			pkg->num_cars = rand() % 100;
-			pkg->latitude = gps_pkt->latitude;
-			pkg->longitude = gps_pkt->longitude;
-			pkg->pst = gps_pkt->local_time;
-			pkg->time_span = (data_start_time - clock()) / CLOCKS_PER_SEC;
-
-			/* Send package to wifi in JSON format */
-			sendstring_wifi(pkg_to_json(pkg));
-
-			/* Reset clock */
-			data_start_time = clock();
-		}
-	}
+	// while (1) {
+	// 	/* If the distance sensor is ready to send data to the server */
+	// 	if (rand() % 100 <= 1) {
+	// 		udpate_gps_data(gps_pkt);
+	//
+	// 		/* Fill package with data */
+	// 		pkg->num_cars = rand() % 100;
+	// 		pkg->latitude = gps_pkt->latitude;
+	// 		pkg->longitude = gps_pkt->longitude;
+	// 		pkg->pst = gps_pkt->local_time;
+	// 		pkg->time_span = (data_start_time - clock()) / CLOCKS_PER_SEC;
+	//
+	// 		/* Send package to wifi in JSON format */
+	// 		sendstring_wifi(pkg_to_json(pkg));
+	//
+	// 		/* Reset clock */
+	// 		data_start_time = clock();
+	// 	}
+	// }
 
 	return 0;
 }
