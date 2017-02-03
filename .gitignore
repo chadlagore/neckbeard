@@ -17,3 +17,6 @@
 !wifi.h
 !gps.c
 !gps.h
+!init.lua
+!distance.c
+!distance.h
