@@ -21,3 +21,7 @@
 !package.c
 !distance.h
 !distance.c
+!OutGraphicsCharFont2.c
+!OutGraphicsCharFont2.h
+!Fill.c
+!Fonts.c

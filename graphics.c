@@ -142,13 +142,7 @@ void Rectangle(int x1, int y1, int x2, int y2, int color)
 */
 void WriteFilledRectangle(int x1, int y1, int x2, int y2, int Colour)
 {
-	if(x1 > x2)
-		fail("x1 > x2");
-	else if(y1 < y2)
-		fail("x1 > x2");
-
 	int width = x2 - x1;
-	int height = x2 - x1;
 
 	WAIT_FOR_GRAPHICS;
 
@@ -165,7 +159,6 @@ void WriteFilledRectangle(int x1, int y1, int x2, int y2, int Colour)
 	}
 }
 
-/
 
 /**
  * Draw a circle (hardware-accelerated)
@@ -173,7 +166,6 @@ void WriteFilledRectangle(int x1, int y1, int x2, int y2, int Colour)
  */
 void WriteCircle(int x0, int y0, int radius, int color)
 {
-	fail("Not implemnted.");
 	WAIT_FOR_GRAPHICS;
 
 	GraphicsX1Reg = x0;

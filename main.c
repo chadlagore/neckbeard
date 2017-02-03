@@ -5,12 +5,14 @@
 #include "nios_system.h"
 #include "touch.h"
 #include "bluetooth.h"
-// #include "graphics.h"
+#include "graphics.h"
 #include "wifi.h"
 #include "gps.h"
 #include "distance.h"
 #include "package.h"
-// #include "altera_up_avalon_character_lcd.h"
+#include "OutGraphicsCharFont2.h"
+#include "Fill.h"
+#include "altera_up_avalon_character_lcd.h"
 
 int main() {
 	printf("Data boys lets go!\n");

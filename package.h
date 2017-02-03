@@ -19,7 +19,7 @@ struct package {
 };
 
 struct package *pkg_create(void);
-struct package *pkg_destroy(struct package *pkg);
+void pkg_destroy(struct package *pkg);
 char *pkg_to_json(struct package *pkg);
 
 #endif /* _PACKAGE_H_ */

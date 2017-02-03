@@ -9,7 +9,7 @@ void init_wifi() {
     for (i = 0; i < 10; i++) sendstring_wifi("\n\r");
 }
 
-void putchar_wifi(int c) {
+void putchar_wifi(char c) {
     while ((WIFI_STATUS & 0x2) != 0x2);
 	WIFI_TX = c;
 }

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "package.h"
 
 /*
@@ -8,15 +9,15 @@
  */
 struct package *pkg_create() {
 	struct package *pkg = malloc(sizeof(struct package));
-	pkg->PST = malloc(sizeof(char)*8);
+	pkg->pst = malloc(sizeof(char)*8);
 	return pkg;
 }
 
 /*
  * Frees memory allocated by pkg struct and its constituents
  */
-struct package *pkg_destroy(struct package *pkg) {
-	free(pkg->PST);
+void pkg_destroy(struct package *pkg) {
+	free(pkg->pst);
 	free(pkg);
 }
 
@@ -27,7 +28,7 @@ struct package *pkg_destroy(struct package *pkg) {
  */
 char *pkg_to_json(struct package *pkg) {
 	char *json_str = malloc(sizeof(char)*100);
-	char *base_str = "{\"num_cars\" :1, \"latitude\" :2, \"longitude\" :3, \"PST\" :4, \"time_span\" :5 }\0";
+	char *base_str = "{\"num_cars\" :1, \"latitude\" :2, \"longitude\" :3, \"pst\" :4, \"time_span\" :5 }\0";
 
 	/* Fill in values in the base JSON string using package data */
 	int i;
@@ -43,27 +44,27 @@ char *pkg_to_json(struct package *pkg) {
 
 			/* Copy time span */
 			if (marker == '5') {
-				sprintf(json_strj + i, "%d", pkg->time_span);
+				sprintf(json_str + i, "%d", pkg->time_span);
 			}
 
-			/* Copy PST */
+			/* Copy pst */
 			else if (marker == '4') {
-				sprintf(json_strj + i, "%s", pkg->PST);
+				sprintf(json_str + i, "%s", pkg->pst);
 			}
 
 			/* Copy longitude */
 			else if (marker == '3') {
-				sprintf(json_strj + i, "%d", pkg->longitude);
+				sprintf(json_str + i, "%d", pkg->longitude);
 			}
 
 			/* Copy latitude */
 			else if (marker == '2') {
-				sprintf(json_strj + i, "%d", pkg->latitude);
+				sprintf(json_str + i, "%d", pkg->latitude);
 			}
 
 			/* Copy num_cars */
 			else {
-				sprintf(json_strj + i, "%d", pkg->num_cars);
+				sprintf(json_str + i, "%d", pkg->num_cars);
 			}
 		}
 	}

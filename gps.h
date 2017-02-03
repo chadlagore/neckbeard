@@ -31,23 +31,11 @@ struct gps_packet {
     char *checksum;
 };
 
-struct gps_packet *gps_packet_create() {
-    struct gps_packet *packet = malloc(sizeof(struct gps_packet));
-    packet->packetStr = malloc(sizeof(char)*MAX_PACKET_LENGTH);
-    packet->utc_time = malloc(sizeof(char)*UTC_TIME_LENGTH);
-    packet->local_time = malloc(sizeof(char)*UTC_TIME_LENGTH);
-    packet->latitude = malloc(sizeof(char)*LATITUDE_LENGTH);
-    packet->NS_indicator = malloc(sizeof(char)*INDICATOR_LENGTH);
-    packet->longitude = malloc(sizeof(char)*LONGITUDE_LENGTH);
-    packet->EW_indicator = malloc(sizeof(char)*INDICATOR_LENGTH);
-    packet->satelites_used = malloc(sizeof(char)*SATS_USED_LENGTH);
-    packet->checksum = malloc(sizeof(char)*CHECKSUM_LENGTH);
-}
-
 void init_gps(void);
 void gps_send_char(char c);
 char gps_receive_char(void);
 
+struct gps_packet *gps_packet_create(void);
 void get_gps_data(struct gps_packet *pack);
 void receive_packet(struct gps_packet *pack);
 int is_GGA(struct gps_packet *pack);

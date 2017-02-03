@@ -23,7 +23,7 @@ char get_char(void){
 	return BLUETOOTH_RXDATA;
 }
 
-void send_string(char str[]){
+void sendstring_bluetooth(char str[]){
 
     int i;
 	int length = strlen(str);
