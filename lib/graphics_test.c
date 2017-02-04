@@ -359,8 +359,8 @@ void write_test_screen() {
 	TestCircle(700, 100, 50, WHITE);
 	WriteCircle(700, 100, 50, LIME);
 
-	TestFilledCircle(500, 300, 50, WHITE);
-	TestFilledCircle(700, 300, 50, WHITE);
+	TestFilledCircle(200, 300, 50, WHITE);
+	TestFilledCircle(400, 300, 50, WHITE);
 
 }
 
