@@ -90,7 +90,7 @@ function send_sms(from,to,body)
      end)
 end
 
-function check_wifi()
+function check_wifi(message)
   ip = wifi.sta.getip()
 
  if(ip==nil) then
@@ -100,9 +100,22 @@ function check_wifi()
   print("Connected to AP!")
   print(ip)
   -- send a text message from, to, text
-  send_sms("(604) 330-1401","(604) 720-7868","Ring-Ring - this is your breadboard calling!!!!")
+  send_sms("(604) 330-1401","(604) 720-7868", message)
 
  end
 end
 
-check_wifi()
+--gpio.mode(4, gpio.OUTPUT)
+--gpio.write(4, gpio.HIGH)
+lighton=0
+pin=4
+gpio.mode(pin,gpio.OUTPUT)
+tmr.alarm(1,2000,1,function()
+    if lighton==0 then
+        lighton=1
+        gpio.write(pin,gpio.HIGH)
+    else
+        lighton=0
+         gpio.write(pin,gpio.LOW)
+    end
+end)
