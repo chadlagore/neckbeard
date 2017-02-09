@@ -14,8 +14,7 @@ void putchar_wifi(char c) {
 }
 
 char getchar_wifi(void) {
-	int i;
-    for (i = 0; (WIFI_STATUS & 0x1) != 0x1 && i < 500; i++);
+	while ((WIFI_STATUS & 0x1) != 0x1);
 	return WIFI_RX;
 }
 
@@ -38,8 +37,8 @@ void receivestring_wifi(char *buffer, int buffer_len, char start_char, char end_
     char char_received = 'a';
     int i;
 
-    /* Wait for special command delimiter to start recording (with 300 cycle timeout) */
-    for (i = 0; i < 300 && char_received != start_char; i++) {
+    /* Wait for special command delimiter to start recording */
+    for (i = 0; i < 100 && char_received != start_char; i++) {
         char_received = getchar_wifi();
     }
 

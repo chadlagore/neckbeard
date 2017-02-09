@@ -19,21 +19,21 @@
 
 int main() {
 	/* Run tests */
-	test_wifi();
+	// test_wifi();
 	// test_gps();
 	// test_send_data_package();
 
-	// printf("Init\n");
-	// init_wifi();
-	// printf("Done init\n");
-	// char *buf = malloc(sizeof(char)*100);
+	printf("Init\n");
+	init_wifi();
+	printf("Done init\n");
+	char *buf = malloc(sizeof(char)*100);
 	// while (1) {
-	// 	// sendstring_wifi("check_wifi('hey')\0");
-	// 	putchar_wifi('\n');
-	// 	receivestring_wifi(buf, 100, 'c', ')');
-	// 	printf("%s\n", buf);
-	// 	// usleep(5000000);
-	// 	// printf("Sent message\n");
+		sendstring_wifi("check_wifi('hey')\0");
+		putchar_wifi('\n');
+		receivestring_wifi(buf, 100, 'c', ')');
+		printf("%s\n", buf);
+		usleep(5000000);
+		printf("Sent message\n");
 	// }
 
 	printf("\nDONE\n");
