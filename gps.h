@@ -25,6 +25,7 @@
 
 struct gps_packet {
     char *packetStr;
+    char *packetStr_copy;
     char *utc_time;
     char *local_time;
     char *latitude;
@@ -40,10 +41,10 @@ void gps_send_char(char c);
 char gps_receive_char(void);
 
 struct gps_packet *gps_packet_create(void);
-void udpate_gps_data(struct gps_packet *pack);
-void receive_packet(struct gps_packet *pack);
-int is_GGA(struct gps_packet *pack);
-void parse_packet(struct gps_packet *pack);
-char *utc_to_local(struct gps_packet *pack);
+void update_gps_data(struct gps_packet *gps_pkt);
+void receive_packet(struct gps_packet *gps_pkt);
+int is_GGA(struct gps_packet *gps_pkt);
+void parse_packet(struct gps_packet *gps_pkt);
+char *utc_to_local(struct gps_packet *gps_pkt);
 
 #endif /* GPS_H_ */

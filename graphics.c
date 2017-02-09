@@ -5,7 +5,6 @@
 
 #include <stdio.h>
 #include "graphics.h"
-
 #include "OutGraphicsCharFont2.h"
 
 
@@ -142,7 +141,9 @@ void Rectangle(int x1, int y1, int x2, int y2, int color)
 */
 void WriteFilledRectangle(int x1, int y1, int x2, int y2, int Colour)
 {
+
 	int width = x2 - x1;
+	int height = x2 - x1;
 
 	WAIT_FOR_GRAPHICS;
 
@@ -158,7 +159,6 @@ void WriteFilledRectangle(int x1, int y1, int x2, int y2, int Colour)
 		y1++;
 	}
 }
-
 
 /**
  * Draw a circle (hardware-accelerated)

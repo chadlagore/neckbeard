@@ -53,7 +53,17 @@ void TestFilledRectangle(int x1, int y1, int x2, int y2, int color)
 	}
 }
 
+void TestFilledRectangle2(int x1, int y1, int x2, int y2, int color){
 
+	int i;
+	int j;
+
+	for (i = y1; i <= y2; i++){
+		for (j = x1; j <= x2; j++){
+			WriteAPixel(j, i, color);
+		}
+	}
+}
 
 /*********************************************************************************************
 * Draw a horizontal line (1 pixel at a time) starting at the x,y coords specified
@@ -65,6 +75,18 @@ void TestHLine(int x1, int y1, int length, int Colour)
 	int i;
 	for(i = x1; i < x1+length; i++ )
 		WriteAPixel(i, y1, Colour);
+}
+
+void testClearScreen(void){
+	int i;
+	int j;
+
+	for (i = 0; i <= YRES; i++){
+		for (j = 0; j <= XRES; j++){
+			WriteAPixel(j, i, BLACK);
+		}
+	}
+
 }
 
 /*********************************************************************************************
@@ -157,6 +179,34 @@ void TestLine(int x1, int y1, int x2, int y2, int Colour)
     }
 }
 
+void testButton(int x1, int y1, int x2, int y2, int outline_color, int font_color, int fill_color, char *text)
+{
+	const int text_padding_x = 6;
+	const int text_padding_y = 6;
+	TestFilledRectangle2(x1, y1, x2, y2, fill_color);
+	Rectangle(x1, y1, x2, y2, outline_color);
+	Text(x1+text_padding_x, y1+text_padding_y, font_color, fill_color, text, 1);
+}
+
+void testRectangle (int x1, int y1, int x2, int y2, int colour) {
+	int i;
+
+	for (i = x1; i <= x2; i++) {
+		WriteAPixel(i, y1, colour);
+	}
+
+	for (i = x1; i <= x2; i++) {
+		WriteAPixel(i, y2, colour);
+	}
+
+	for (i = y1; i <= y2; i++) {
+			WriteAPixel(x1, i, colour);
+	}
+
+	for (i = y1; i <= y2; i++) {
+			WriteAPixel(x2, i, colour);
+	}
+}
 /*******************************************************************************
 * Compare functions to check for correctness
 * Use for testing only
@@ -257,28 +307,44 @@ void write_test_screen() {
 	// and a LIME rectangles below
 
 	// even to even
-	WriteFilledRectangle(400, 250, 500, 300, LIME);
-	TestFilledRectangle(400, 250, 500, 300, WHITE);
+	//WriteFilledRectangle(400, 250, 500, 300, LIME);
+	//TestFilledRectangle(400, 250, 500, 300, WHITE);
 
 	// even to odd
-	WriteFilledRectangle(600, 250, 701, 300, LIME);
+	// WriteFilledRectangle(600, 250, 701, 300, LIME);
 	TestFilledRectangle(600, 250, 701, 300, WHITE);
 
 	// odd to even
 	TestFilledRectangle(401, 350, 500, 400, WHITE);
-	WriteFilledRectangle(401, 350, 500, 400, LIME);
+	// WriteFilledRectangle(401, 350, 500, 400, LIME);
 
 	// odd to odd
 	TestFilledRectangle(601, 350, 701, 400, WHITE);
-	WriteFilledRectangle(601, 350, 701, 400, LIME);
+	// WriteFilledRectangle(601, 350, 701, 400, LIME);
 
 	// compare circles
 	WriteCircle(500, 100, 50, LIME);
 	TestCircle(500, 100, 50, WHITE);
 	TestCircle(700, 100, 50, WHITE);
 	WriteCircle(700, 100, 50, LIME);
-}
 
-void main(void) {
-  write_test_screen();
 }
+//
+// void main(void) {
+// 	int i;
+// 	//ClearScreen(BLACK);
+// 	//Text(200, 240, LIME, BLACK, "in the time of chimpanzees I was a monkey", 0);
+// 	//Button(400, 250, 500, 300, RED, BLUE, LIME, "push me i'm a button");
+// 	//TestFilledRectangle(601, 350, 701, 400, WHITE);
+// 	//write_test_screen();
+// 	testClearScreen();
+// 	//TestFilledRectangle2(100, 100, 200, 200, RED);
+// 	testButton(100, 100, 200, 200, WHITE, LIME, RED, "PEACE");
+// 	TestCircle(125, 150, 25, WHITE);
+// 	TestCircle(175, 150, 25, WHITE);
+//
+// 	for (i = 12; i >=0; i--){
+// 		TestCircle(125, 150, i, WHITE);
+// 		TestCircle(175, 150, i, WHITE);
+// 	}
+// }

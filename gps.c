@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
+#include <stdlib.h>
 
 void init_gps(void) {
 	GPS_CONTROL = 0x15;
@@ -28,6 +29,7 @@ char gps_receive_char(void) {
 struct gps_packet *gps_packet_create() {
 	struct gps_packet *packet = malloc(sizeof(struct gps_packet));
 	packet->packetStr = malloc(sizeof(char)*MAX_PACKET_LENGTH);
+	packet->packetStr_copy = malloc(sizeof(char)*MAX_PACKET_LENGTH);
 
 	return packet;
 }
@@ -74,10 +76,11 @@ int is_GGA(struct gps_packet *pkt) {
  * loose uniformity of indices)
  */
 void parse_packet(struct gps_packet *pkt) {
-	/* total number of tokens in GPGGA packet - excluding <CR> */
+	sprintf(pkt->packetStr_copy, "%s", pkt->packetStr);
+
 	char **tokens[15];
 	int i = 0;
-	char *token = strtok(pkt->packetStr, ",");
+	char *token = strtok(pkt->packetStr_copy, ",");
 
 	for (i = 0; token != NULL; i++) {
 		tokens[i] = token;
@@ -92,6 +95,19 @@ void parse_packet(struct gps_packet *pkt) {
 	pkt->EW_indicator = tokens[5];
 	pkt->satelites_used = tokens[7];
 	pkt->checksum = tokens[14];
+
+	/* Shift commas left by two in lat and long */
+    char upper = pkt->latitude[2];
+    char lower = pkt->latitude[3];
+    pkt->latitude[2] = '.';
+    pkt->latitude[3] = upper;
+    pkt->latitude[4] = lower;
+
+    upper = pkt->longitude[3];
+    lower = pkt->longitude[4];
+    pkt->longitude[3] = '.';
+    pkt->longitude[4] = upper;
+    pkt->longitude[5] = lower;
 }
 
 /*
@@ -99,13 +115,12 @@ void parse_packet(struct gps_packet *pkt) {
  * in string format
  */
 char *utc_to_local(struct gps_packet *pkt) {
-	char *temp = pkt->utc_time;
-	int hours_h = (int) *temp;
-	int hours_l = (int) *temp+1;
-	int minutes_h = (int) *temp +2;
-	int minutes_l = (int) *temp +3;
-	int seconds_h = (int) *temp +4;
-	int seconds_l = (int) *temp +5;
+	int hours_h = ((char) pkt->utc_time[0] - '0');
+	int hours_l = ((char) pkt->utc_time[1] - '0');
+	int minutes_h = ((char) pkt->utc_time[2] - '0');
+	int minutes_l = ((char) pkt->utc_time[3] - '0');
+	int seconds_h = ((char) pkt->utc_time[4] - '0');
+	int seconds_l = ((char) pkt->utc_time[5] - '0');
 
 	/* Add 8 hours to UTC time for Vancouver time */
 	int hours = (hours_h*10 + hours_l + 8) % 24;
@@ -121,12 +136,10 @@ char *utc_to_local(struct gps_packet *pkt) {
 	return pkt->local_time;
 }
 
-void udpate_gps_data(struct gps_packet *pkt) {
+void update_gps_data(struct gps_packet *pkt) {
 	do {
 		receive_packet(pkt);
-		printf("Packet str: %s\n", pkt->packetStr);
 	} while(!is_GGA(pkt));
-	printf("Parsing packet\n");
 	parse_packet(pkt);
 	utc_to_local(pkt);
 }

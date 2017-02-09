@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <unistd.h>
 #include "nios_system.h"
 #include "touch.h"
 #include "bluetooth.h"
@@ -9,75 +10,33 @@
 #include "wifi.h"
 #include "gps.h"
 #include "distance.h"
-#include "package.h"
-#include "OutGraphicsCharFont2.h"
+#include "data_package.h"
 #include "Fill.h"
+#include "graphics_test.h"
+#include "tests.h"
 #include "altera_up_avalon_character_lcd.h"
-
-static void test_gps() {
-	printf("Starting GPS test\n");
-	init_gps();
-
-	struct gps_packet *gps_pkt = gps_packet_create();
-	udpate_gps_data(gps_pkt);
-	printf("GPS Data: %s\n", gps_pkt->packetStr);
-
-	printf("Done GPS test\n");
-}
-
-static void test_wifi() {
-	printf("Starting Wifi test\n");
-	init_wifi();
-
-	int buf_len = 500;
-	char *buffer = malloc(sizeof(char)*buf_len);
-	sendstring_wifi("print('hello world');");
-	receivestring_wifi(buffer, buf_len, ';', '\n');
-
-	printf("Wifi Data: %s\n", buffer);
-	free(buffer);
-
-	printf("Done Wifi test\n");
-}
 
 
 int main() {
 	/* Run tests */
 	test_wifi();
-	test_gps();
+	// test_gps();
+	// test_send_data_package();
 
-	// printf("Data boys lets go!\n");
-	//
-	// /* Initialize everyting! */
-	// init_gps();
+	// printf("Init\n");
 	// init_wifi();
-	// init_touch();
-	// // init_distance();
-	//
-	// struct package *pkg = pkg_create();
-	// struct gps_packet *gps_pkt = gps_packet_create();
-	// clock_t data_start_time = clock();
-	//
-	/* Inifitely loop and get data */
+	// printf("Done init\n");
+	// char *buf = malloc(sizeof(char)*100);
 	// while (1) {
-	// 	/* If the distance sensor is ready to send data to the server */
-	// 	if (rand() % 100 <= 1) {
-	// 		udpate_gps_data(gps_pkt);
-	//
-	// 		/* Fill package with data */
-	// 		pkg->num_cars = rand() % 100;
-	// 		pkg->latitude = gps_pkt->latitude;
-	// 		pkg->longitude = gps_pkt->longitude;
-	// 		pkg->pst = gps_pkt->local_time;
-	// 		pkg->time_span = (data_start_time - clock()) / CLOCKS_PER_SEC;
-	//
-	// 		/* Send package to wifi in JSON format */
-	// 		sendstring_wifi(pkg_to_json(pkg));
-	//
-	// 		/* Reset clock */
-	// 		data_start_time = clock();
-	// 	}
+	// 	// sendstring_wifi("check_wifi('hey')\0");
+	// 	putchar_wifi('\n');
+	// 	receivestring_wifi(buf, 100, 'c', ')');
+	// 	printf("%s\n", buf);
+	// 	// usleep(5000000);
+	// 	// printf("Sent message\n");
 	// }
 
+	printf("\nDONE\n");
+	while (1) {};
 	return 0;
 }

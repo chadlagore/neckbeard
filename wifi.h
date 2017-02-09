@@ -16,7 +16,7 @@ void init_wifi(void);
 /* Send character to wifi */
 void putchar_wifi(char c);
 
-/* Recieve character from wifi */
+/* Recieve character from wifi (with 300 cycle timeout) */
 char getchar_wifi(void);
 
 /* Send string to wifi (string must be '\0' terminated) */

@@ -1,6 +1,8 @@
 #ifndef _PACKAGE_H_
 #define _PACKAGE_H_
 
+#include "gps.h"
+
 /*
  * A package containing data to be sent to the server
  * num_cars: the number of cars that have passed since the last
@@ -10,16 +12,17 @@
  * pst: the pacific standard time at which this package was sent
  * time_span: the number of seconds over whidh the data in this package was collected
  */
-struct package {
-	int num_cars;
+struct data_package {
+	char *num_cars;
 	char *latitude;
 	char *longitude;
 	char *pst;
-	int time_span;
+	char *time_span;
 };
 
-struct package *pkg_create(void);
-void pkg_destroy(struct package *pkg);
-char *pkg_to_json(struct package *pkg);
+struct data_package *pkg_create(void);
+void pkg_destroy(struct data_package *pkg);
+void pkg_to_command(struct data_package *pkg, char *json_str);
+void update_pkg(struct data_package *data_pkg, int num_cars, int time_span, struct gps_packet *gps_pkt);
 
 #endif /* _PACKAGE_H_ */
