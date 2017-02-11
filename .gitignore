@@ -30,3 +30,6 @@
 !graphics_test.h
 !tests.h
 !tests.c
+!init.lua
+!distance.c
+!distance.h
