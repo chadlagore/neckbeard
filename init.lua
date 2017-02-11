@@ -36,11 +36,13 @@ TWILIO_TOKEN =       "f87048377ab8f3507bcae3137f77da44"
 
 -- this is the web address of the relay web site that our dongle sends the initial HTTP request to
 HOST = "iot-https-relay.appspot.com" 
+HEROKU_HOST = "tranquil-shore-92989.herokuapp.com"
 
 -- The following variable defines the TWILIO web site that we will connect to
 -- use the first one if you want to send a text to a cell phone
 -- use the second (commented out) one if you want to make a call to a cell phone - that's the only change
 URI = "/twilio/Messages.json"
+HEROKU_URI = "/traffic/data"
 --URI = "/twilio/Calls.json"
 
 function build_post_request(host, uri, data_table)
@@ -62,10 +64,11 @@ function build_post_request(host, uri, data_table)
      return request
 end
 
+
 -- This function registers a function to echo back any response from the server, to our DE1/NIOS system 
 -- or hyper-terminal (depending on what the dongle is connected to)
 function display(sck,response)
-     print(response)
+     print(response) -- sorry bruno
 end
 
 -- When using send_sms: the "from" number HAS to be your twilio number.
@@ -86,6 +89,26 @@ function send_sms(from,to,body)
 
      socket:on("connection",function(sck)
           post_request = build_post_request(HOST,URI,data)
+          sck:send(post_request)
+     end)
+end
+
+
+-- all args must be passed in as strings
+function s(cars, lat, long, time)
+     data = {
+        numCars = cars,
+        latitude = lat,
+        longitude = long,
+        timestamp = time
+     }
+
+     socket = net.createConnection(net.TCP,0)
+     socket:on("receive",display)
+     socket:connect(80,HEROKU_HOST)
+
+     socket:on("connection",function(sck)
+          post_request = build_post_request(HEROKU_HOST,HEROKU_URI,data)
           sck:send(post_request)
      end)
 end
