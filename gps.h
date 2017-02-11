@@ -4,27 +4,47 @@
 // Define bluetooth control registers
 #define GPS_STATUS   (*(volatile unsigned char *)(0x84000210))
 #define GPS_CONTROL  (*(volatile unsigned char *)(0x84000210))
-#define GPS_TXDATA   (*(volatile unsigned char *)(0x84000212)) //Not sure
-#define GPS_RXDATA   (*(volatile unsigned char *)(0x84000212)) //which is which
-#define GPS_BAUD     (*(volatile unsigned char *)(0x84000214)) //provided
+#define GPS_TXDATA   (*(volatile unsigned char *)(0x84000212))
+#define GPS_RXDATA   (*(volatile unsigned char *)(0x84000212))
+#define GPS_BAUD     (*(volatile unsigned char *)(0x84000214))
+
+#define HEX0_1       (volatile unsigned char *) (0x2030)
+#define HEX2_3		 (volatile unsigned char *) (0x2040)
+#define HEX4_5 	     (volatile unsigned char *) (0x2050)
 
 #define GPS_TX_MASK 0x02
 #define GPS_RX_MASK 0x01
 
-void send_char(char c);
-char receive_char(void);
-void packet_to_str(void);
-int check_GGA();
-void parse_packet(char packetStr[]);
-int swap_endian(char *s);
-float convert_latitude(int x);
-float convert_longitude(int x);
-int utc_to_local(char *utc_time);
+#define MAX_PACKET_LENGTH 82
+#define UTC_TIME_LENGTH 8
+#define LATITUDE_LENGTH 9
+#define LONGITUDE_LENGTH 10
+#define INDICATOR_LENGTH 1
+#define SATS_USED_LENGTH 1
+#define CHECKSUM_LENGTH 3
 
-void save_points(void);
-void config_log(void);
-void start_log(void);
-void stop_log(void);
-void erase_log(void);
+struct gps_packet {
+    char *packetStr;
+    char *packetStr_copy;
+    char *utc_time;
+    char *local_time;
+    char *latitude;
+    char *NS_indicator;
+    char *longitude;
+    char *EW_indicator;
+    char *satelites_used;
+    char *checksum;
+};
 
-#endif // GPS_H_
+void init_gps(void);
+void gps_send_char(char c);
+char gps_receive_char(void);
+
+struct gps_packet *gps_packet_create(void);
+void update_gps_data(struct gps_packet *gps_pkt);
+void receive_packet(struct gps_packet *gps_pkt);
+int is_GGA(struct gps_packet *gps_pkt);
+void parse_packet(struct gps_packet *gps_pkt);
+char *utc_to_local(struct gps_packet *gps_pkt);
+
+#endif /* GPS_H_ */
