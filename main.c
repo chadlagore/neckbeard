@@ -23,18 +23,34 @@ int main() {
 	// test_gps();
 	// test_send_data_package();
 
-	printf("Init\n");
+	printf("Initializing...\n");
+	init_gps();
 	init_wifi();
-	printf("Done init\n");
-	char *buf = malloc(sizeof(char)*100);
-	// while (1) {
-		sendstring_wifi("check_wifi('hey')\0");
-		putchar_wifi('\n');
-		receivestring_wifi(buf, 100, 'c', ')');
-		printf("%s\n", buf);
-		usleep(5000000);
-		printf("Sent message\n");
-	// }
+	printf("Done Initializing\n");
+
+	struct gps_packet *gps_pkt = gps_packet_create();
+	char *command = malloc(sizeof(char)*100);
+	char *response = malloc(sizeof(char)*500);
+
+	while (1) {
+		update_gps_data(gps_pkt);
+		sprintf(command, "s('%s','%s','%s','%s')\0",
+			"25", gps_pkt->latitude, gps_pkt->longitude, gps_pkt->utc_time);
+
+		printf("Sending command: %s\n", command);
+		sendstring_wifi(command);
+		// receivestring_wifi(response, 500, 's', ')');
+		// printf("Response: %s\n", response);
+
+		usleep(10000000);
+	}
+
+	// sendstring_wifi("check_wifi('hey')\0");
+	// putchar_wifi('\n');
+	// receivestring_wifi(buf, 100, 'c', ')');
+	// printf("%s\n", buf);
+	// usleep(5000000);
+	// printf("Sent message\n");
 
 	printf("\nDONE\n");
 	while (1) {};

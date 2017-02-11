@@ -4,7 +4,13 @@ void init_wifi() {
     WIFI_CONTROL = 0x15;
     WIFI_BAUD = 0x01;
 
+    putchar_wifi('\r');
     putchar_wifi('\n');
+    putchar_wifi('\r');
+    putchar_wifi('\n');
+    putchar_wifi('\r');
+    putchar_wifi('\n');
+    putchar_wifi('\r');
     putchar_wifi('\n');
 }
 
@@ -42,8 +48,10 @@ void receivestring_wifi(char *buffer, int buffer_len, char start_char, char end_
         char_received = getchar_wifi();
     }
 
-    for (i = 1; i < buffer_len && char_received != end_char; i++) {
+    buffer[0] = start_char;
+
+    for (i = 1; i < buffer_len-1 && char_received != end_char; i++) {
         buffer[i] = char_received = getchar_wifi();
     }
-    buffer[buffer_len-1] = '\0';
+    buffer[++i] = '\0';
 }
