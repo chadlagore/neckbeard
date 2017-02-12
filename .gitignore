@@ -1,0 +1,35 @@
+# Ignore everything
+*
+
+# Except the following
+!.gitignore
+!README.md
+!main.c
+!bluetooth.c
+!bluetooth.h
+!touch.c
+!touch.h
+!nios_system.c
+!nios_system.h
+!graphics.c
+!graphics.h
+!wifi.c
+!wifi.h
+!gps.c
+!gps.h
+!data_package.h
+!data_package.c
+!distance.h
+!distance.c
+!OutGraphicsCharFont2.c
+!OutGraphicsCharFont2.h
+!Fill.c
+!Fill.h
+!Fonts.c
+!graphics_test.c
+!graphics_test.h
+!tests.h
+!tests.c
+!init.lua
+!distance.c
+!distance.h
