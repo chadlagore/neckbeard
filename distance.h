@@ -26,6 +26,6 @@
 void init_distance(void);
 int get_distance(void);
 float read_dist(void);
-int count_cars(int seconds, float base_dist);
+void count_cars(int seconds, float base_dist);
 
 #endif /* _DISTANCE_H_ */

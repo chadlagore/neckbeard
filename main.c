@@ -21,36 +21,6 @@
 #define SOFTWARE_COUNTER  		1
 
 
-/* reverse:  reverse string s in place */
-void reverse(char s[]) {
-	int i, j;
-	char c;
-
-	for (i = 0, j = strlen(s)-1; i<j; i++, j--) {
-		c = s[i];
-		s[i] = s[j];
-		s[j] = c;
-	}
-}
-
-/* itoa:  convert n to characters in s */
-void itoa(int n, char s[]) {
-	int i, sign;
-
-	if ((sign = n) < 0)  /* record sign */
-	n = -n;          /* make n positive */
-	i = 0;
-	do {       /* generate digits in reverse order */
-		s[i++] = n % 10 + '0';   /* get next digit */
-	} while ((n /= 10) > 0);     /* delete it */
-	if (sign < 0) {
-		s[i++] = '-';
-	}
-	s[i] = '\0';
-	reverse(s);
-}
-
-
 int main() {
 	/* Run tests */
 	// test_wifi();
@@ -58,33 +28,40 @@ int main() {
 	// test_send_data_package();
 
 	struct gps_packet *gps_pkt = gps_packet_create();
-	char *command = malloc(sizeof(char)*100);
-	char car_count_str[4];
-	int car_count;
+	int car_count, x, y;
 	float base_dist = read_dist();
+	Point point_touched;
 
 	printf("Initializing...\n");
 	init_gps();
 	init_wifi();
+	init_touch();
+	startup_screen();
+	main_menu();
 	update_gps_data(gps_pkt);
 	printf("Done Initializing\n");
 
 	while (1) {
-		if (SOFTWARE_COUNTER) {
-			car_count = count_cars(CAR_COUNT_INTERVAL, base_dist);
-		} else {
-			car_count = CAR_COUNT;
+		point_touched = get_press();
+		x = point_touched.x;
+		y = point_touched.y;
+
+		if (CAR_BUTTON) {
+			if (SOFTWARE_COUNTER) {
+				count_cars(CAR_COUNT_INTERVAL, base_dist);
+			} else {
+				// car_count = CAR_COUNT; TODO
+			}
 		}
 
-		/* Convert car count to string */
-		itoa(car_count, car_count_str);
+		else if (GPS_BUTTON) {
+			display_gps();
+		}
 
-		update_gps_data(gps_pkt);
-		sprintf(command, "s('%s','%s','%s','%s')\0",
-			car_count_str, gps_pkt->latitude, gps_pkt->longitude, gps_pkt->utc_time);
-
-		printf("Sending command: %s\n", command);
-		sendstring_wifi(command);
+		else if (CALIBRATE_BUTTON) {
+			calibrate();
+			base_dist = read_dist();
+		}
 	}
 
 	printf("\nDONE\n");
