@@ -72,16 +72,6 @@ void count_cars(int seconds, float base_dist) {
 
 
 	while (1) {
-		touch_piont = get_press();
-		x = touch_piont.x;
-		y = touch_piont.y;
-
-		if (EXIT_BUTTON) {
-			free(gps_pkt);
-			main_menu();
-			return;
-		}
-
 		/* Get distance from sensor */
 		dist_read = read_dist();
 
@@ -105,6 +95,17 @@ void count_cars(int seconds, float base_dist) {
 			sendstring_wifi(command);
 
 			start = clock();
+		}
+
+		/* Check for user action */
+		touch_piont = get_press();
+		x = touch_piont.x;
+		y = touch_piont.y;
+
+		if (EXIT_BUTTON) {
+			free(gps_pkt);
+			main_menu();
+			return;
 		}
 	}
 }

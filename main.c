@@ -12,8 +12,8 @@
 #include "distance.h"
 #include "data_package.h"
 #include "Fill.h"
-#include "graphics_test.h"
 #include "tests.h"
+#include "gui.h"
 #include "altera_up_avalon_character_lcd.h"
 
 #define ONE_SECOND 				1000
@@ -37,7 +37,6 @@ int main() {
 	init_touch();
 	startup_screen();
 	main_menu();
-	update_gps_data(gps_pkt);
 	printf("Done Initializing\n");
 
 	while (1) {

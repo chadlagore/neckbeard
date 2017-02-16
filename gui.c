@@ -1,4 +1,4 @@
-#include "giu.h"
+#include "gui.h"
 #include <stdio.h>
 #include <unistd.h>
 
@@ -148,14 +148,26 @@ void display_gps() {
     Text(320, 220, BLACK, YELLOW, "TIME:", 0);
     TestFilledRectangle(245, 260, 545, 290, BLACK);
 
+    /* Get GPS data */
+    struct gps_packet *gps_pkt = gps_packet_create();
+    char local_time[9], coordinates[16];
+
     while(1) {
         Point indicator = get_press();
         int x = indicator.x;
         int y = indicator.y;
+
+        update_gps_data(gps_pkt);
+        sprintf(local_time, "%s\0", gps_pkt->local_time);
+        sprintf(coordinates, "%s, %s\0", gps_pkt->latitude, gps_pkt->longitude);
+
+        /* Display the time and coordinates */
+        //TODO
+
+        if (EXIT_BUTTON) {
+            free(gps_pkt);
+            main_menu();
+            return;
+        }
     }
-
-    /**
-     * create string of gps/time data
-     */
-
 }
