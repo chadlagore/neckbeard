@@ -7,15 +7,43 @@
 #include "touch.h"
 //#include "bluetooth.h"
 #include "graphics.h"
-#include "graphics_test.h"
+//#include "graphics_test.h"
 #include "gui.h"
 //#include "gps.h"
 //#include "altera_up_avalon_character_lcd.h"
 
 
 void main(void) {
+	init_touch();
 	startup_screen();
 
+	MENU:
+		main_menu();
+
+		while(1){
+		Point indicator = get_press();
+		int x = indicator.x;
+		int y = indicator.y;
+
+		if (CALIBRATE_BUTTON){
+			calibrate();
+			goto MENU;
+		}
+		if (GPS_BUTTON){
+			display_gps();
+			while(1){
+				indicator = get_press();
+				x = indicator.x;
+				y = indicator.y;
+
+
+				if (EXIT_BUTTON){
+					goto MENU;
+				}
+			}
+		}
+
+		}
 
 	//testClearScreen(RED);
 	//write_test_screen();
