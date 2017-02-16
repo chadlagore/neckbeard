@@ -54,8 +54,8 @@ float read_dist() {
 
 
 /*
- * Count the number of cars that pass every
- * "seconds" number of seconds
+ * Count the number of cars that pass
+ * Every "seconds" number of seconds send data to server
  * It needs to be passed the base_dist, which is the
  * distance from the sensor to the ground when there is
  * no car passing.
