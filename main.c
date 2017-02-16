@@ -27,7 +27,6 @@ int main() {
 	// test_gps();
 	// test_send_data_package();
 
-	struct gps_packet *gps_pkt = gps_packet_create();
 	int car_count, x, y;
 	float base_dist = read_dist();
 	Point point_touched;

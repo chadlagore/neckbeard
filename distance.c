@@ -2,6 +2,7 @@
 #include "touch.h"
 #include "gps.h"
 #include "wifi.h"
+#include "gui.h"
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,6 +62,7 @@ float read_dist() {
  * THIS FUNCTION WILL BLOCK UNTIL THE USER CLICKS EXIT
  */
 void count_cars(int seconds, float base_dist) {
+	struct gps_packet *gps_pkt = gps_packet_create();
 	clock_t start = clock();
 	clock_t delta;
 	float dist_read;
@@ -68,12 +70,17 @@ void count_cars(int seconds, float base_dist) {
 	Point touch_piont;
 	char car_count_str[4], command[100];
 
+
 	while (1) {
 		touch_piont = get_press();
 		x = touch_piont.x;
 		y = touch_piont.y;
 
-		if (EXIT_BUTTON) return;
+		if (EXIT_BUTTON) {
+			free(gps_pkt);
+			main_menu();
+			return;
+		}
 
 		/* Get distance from sensor */
 		dist_read = read_dist();
