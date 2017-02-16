@@ -59,10 +59,9 @@ int main() {
 
 	struct gps_packet *gps_pkt = gps_packet_create();
 	char *command = malloc(sizeof(char)*100);
-	char *response = malloc(sizeof(char)*500);
 	char car_count_str[4];
 	int car_count;
-	float base_dist = read_dist(); // TODO: update when we have a calibration button
+	float base_dist = read_dist();
 
 	printf("Initializing...\n");
 	init_gps();
