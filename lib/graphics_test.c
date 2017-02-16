@@ -3,6 +3,7 @@
  */
 
 #include "graphics_test.h"
+#include "touch.h"
 
 /**
  * Draw a circle (one pixel at a time)
@@ -108,13 +109,13 @@ void TestHLine(int x1, int y1, int length, int Colour)
 		WriteAPixel(i, y1, Colour);
 }
 
-void testClearScreen(void){
+void testClearScreen(int colour){
 	int i;
 	int j;
 
 	for (i = 0; i <= YRES; i++){
 		for (j = 0; j <= XRES; j++){
-			WriteAPixel(j, i, BLACK);
+			WriteAPixel(j, i, colour);
 		}
 	}
 
@@ -246,10 +247,7 @@ void write_test_screen() {
 	// write RED lines (software) over the entire screen area
 	// if we do hardware-accelerated lines and they fail,
 	// the rest of the test will be harder to see
-	int i;
-	for(i = 0; i <= YRES-1; i++) {
-		TestHLine(0, i, XRES-1, RED);
-	}
+
 
 	//each pair of lines (for horizontal/vertical) should have the same length
 
@@ -339,46 +337,67 @@ void write_test_screen() {
 
 	// even to even
 	//WriteFilledRectangle(400, 250, 500, 300, LIME);
-	//TestFilledRectangle(400, 250, 500, 300, WHITE);
+	TestFilledRectangle(400, 250, 500, 300, WHITE);
 
 	// even to odd
-	WriteFilledRectangle(600, 250, 701, 300, LIME);
+	//WriteFilledRectangle(600, 250, 701, 300, LIME);
 	TestFilledRectangle(600, 250, 701, 300, WHITE);
 
 	// odd to even
 	TestFilledRectangle(401, 350, 500, 400, WHITE);
-	WriteFilledRectangle(401, 350, 500, 400, LIME);
+	//WriteFilledRectangle(401, 350, 500, 400, LIME);
 
 	// odd to odd
 	TestFilledRectangle(601, 350, 701, 400, WHITE);
-	WriteFilledRectangle(601, 350, 701, 400, LIME);
+	//WriteFilledRectangle(601, 350, 701, 400, LIME);
 
 	// compare circles
-	WriteCircle(500, 100, 50, LIME);
+	//WriteCircle(500, 100, 50, LIME);
 	TestCircle(500, 100, 50, WHITE);
 	TestCircle(700, 100, 50, WHITE);
-	WriteCircle(700, 100, 50, LIME);
+	//WriteCircle(700, 100, 50, LIME);
 
-	TestFilledCircle(200, 300, 50, WHITE);
-	TestFilledCircle(400, 300, 50, WHITE);
+	//TestFilledCircle(200, 300, 50, WHITE);
+	//TestFilledCircle(400, 300, 50, WHITE);
+
+
 
 }
 
-void main(void) {
-	int i;
-	//ClearScreen(BLACK);
-	//Text(200, 240, LIME, BLACK, "in the time of chimpanzees I was a monkey", 0);
-	//Button(400, 250, 500, 300, RED, BLUE, LIME, "push me i'm a button");
-	//TestFilledRectangle(601, 350, 701, 400, WHITE);
-	//write_test_screen();
-	testClearScreen();
-	//TestFilledRectangle2(100, 100, 200, 200, RED);
-	testButton(100, 100, 200, 200, WHITE, LIME, RED, "PEACE");
-	TestCircle(125, 150, 25, WHITE);
-	TestCircle(175, 150, 25, WHITE);
-
-	for (i = 12; i >=0; i--){
-		TestCircle(125, 150, i, WHITE);
-		TestCircle(175, 150, i, WHITE);
-	}
-}
+//void main(void) {
+//	int i;
+//	//ClearScreen(BLACK);
+//	//Text(200, 240, LIME, BLACK, "I trap on the block, it fall out my skrrt then", 0);
+//	//Button(400, 250, 500, 300, RED, BLUE, LIME, "push me i'm a button");
+//	//TestFilledRectangle(601, 350, 701, 400, WHITE);
+//	//write_test_screen();
+//	testClearScreen(BLACK);
+//	//write_test_screen();
+//	//Text(150, 240, BLACK, RED, "I trap on the block, it fall out my skrrt then", 0);
+//
+//	//TestFilledRectangle2(100, 100, 200, 200, RED);
+//
+//	int x1 = 100;
+//	int y1 = 100;
+//	int x2 = 200;
+//	int y2 = 200;
+//
+//	testButton(100, 100, 200, 200, WHITE, LIME, RED, "PEACE");
+//
+//	while(1){
+//		Point indicator = get_press();
+//
+//		if (indicator.x > x1 && indicator.x < x2 && indicator.y > y1 && indicator.y < y2){
+//			Text(150, 240, BLACK, RED, "Peace be upon you, my child.", 0);
+//		}
+//		else
+//			Text(150,240, BLACK, RED, " ", 1);
+//	}
+////	TestCircle(125, 150, 25, WHITE);
+////	TestCircle(175, 150, 25, WHITE);
+////
+////	for (i = 12; i >=0; i--){
+////		TestCircle(125, 150, i, WHITE);
+////		TestCircle(175, 150, i, WHITE);
+////	}
+//}
