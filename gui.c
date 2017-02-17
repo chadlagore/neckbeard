@@ -185,99 +185,73 @@ void display_cars(){
     Text(320, 170, BLACK, YELLOW, "sending data", 0);
     Text(320, 200, BLACK, YELLOW, "to server...", 0);
 
-	TestFilledCircle(300, 300, 20, 12);
-	TestFilledCircle(295, 300, 20, YELLOW);
-	TestFilledCircle(360, 300, 30, 12);
-	TestFilledCircle(350, 300, 30, YELLOW);
-	TestFilledCircle(440, 300, 40, 12);
-	TestFilledCircle(430, 300, 40, YELLOW);
-
-    //int i;
-
-
-//    //for (i = 0; i <= 10; i++){
-//    	TestFilledCircle(300, 300, 20, 12);
-//		TestFilledCircle(295, 300, 20, YELLOW);
-//		TestFilledCircle(360, 300, 30, 12);
-//		TestFilledCircle(350, 300, 30, YELLOW);
-//		TestFilledCircle(440, 300, 40, 12);
-//		TestFilledCircle(430, 300, 40, YELLOW);
-//
-//    	TestFilledCircle(300, 300, 20, LIME);
-//    	TestFilledCircle(295, 300, 20, YELLOW);
-//    	usleep(1000000);
-//    	TestFilledCircle(360, 300, 30, LIME);
-//    	TestFilledCircle(350, 300, 30, YELLOW);
-//    	usleep(1000000);
-//    	TestFilledCircle(440, 300, 40, LIME);
-//    	TestFilledCircle(430, 300, 40, YELLOW);
-//    	usleep(1000000);
-        //TestFilledRectangle(250, 315, 250 + 29*i , 335, BLUE );
-        //if (i == 5){
-            // base_dist = read_dist(); TODO uncomment when sensor ready
-
-        //usleep(100000);
-    //}
+    TestFilledCircle(300, 300, 20, 12);
+    TestFilledCircle(295, 300, 20, YELLOW);
+    TestFilledCircle(360, 300, 30, 12);
+    TestFilledCircle(350, 300, 30, YELLOW);
+    TestFilledCircle(440, 300, 40, 12);
+    TestFilledCircle(430, 300, 40, YELLOW);
 }
 
-void plot_data(){
 
+void plot_data() {
+    Point touch_point;
+    int x, y;
+    srand(time(NULL));
 
-	int i = 0;
-	TestFilledRectangle(95, 15, 705, 465, WHITE);
-	TestFilledRectangle(100, 20, 700, 460, BLACK);
-	Text(250, 40, WHITE, BLACK, "cars per 10 Second Interval", 0);
-	Text(160, 75, WHITE, BLACK, "50", 0);
-	Text(106, 200, WHITE, BLACK, "cars", 0);
-	Text(106, 220, WHITE, BLACK, "counted", 0);
+    while (1) {
+        /* Draw Graph */
+        TestFilledRectangle(95, 15, 705, 465, WHITE);
+        TestFilledRectangle(100, 20, 700, 460, BLACK);
+        Text(250, 40, WHITE, BLACK, "Cars Per 10 Second Interval", 0);
+        Text(160, 75, WHITE, BLACK, "50", 0);
+        Text(106, 200, WHITE, BLACK, "Cars", 0);
+        Text(106, 220, WHITE, BLACK, "Counted", 0);
+        Text(340, 420, WHITE, BLACK, "Interval", 0);
 
-	Text(340, 420, WHITE, BLACK, "interval", 0);
+        int i = 0;
+        for (i = 0; i <= 10; i ++){
+            TestLine(200, 80+i*32, 600, 80+i*32, WHITE);
+            TestLine(200+i*40, 80, 200+i*40, 400, WHITE);
+        }
 
+        TestFilledRectangle(180, 99, 220, 105, WHITE);
 
-	for (i = 0; i <= 10; i ++){
-		TestLine(200, 80+i*32, 600, 80+i*32, WHITE);
-		TestLine(200+i*40, 80, 200+i*40, 400, WHITE);
-	}
+        /* Draw exit button */
+        TestFilledRectangle(635, 390, 800, 470, BLACK);
+        TestFilledRectangle(640, 395, 795, 475, MAGENTA );
+        Text(690, 425, BLACK, MAGENTA, "EXIT", 0);
 
-	TestFilledRectangle(180, 99, 220, 105, WHITE);
+        /* Plot data */
+        int j, delta, num_cars;
+        clock_t start;
+        for(j = 0; j < 11; j++){
+            start = clock();
+            delta = 0;
+            num_cars = rand() % 51;
 
-	int j;
-	for(j = 0; j < 10; j++){
-		time_t start, end;
-	   double elapsed;  // seconds
-	   start = time(NULL);
-	   int terminate = 1;
+            /* Wait for 1 second (but remain responsive) */
+            while (delta < 1) {
 
-	   int numcars = 0;
+                /* Check if user pressed exit */
+                if (screen_touched()) {
+                    touch_point = get_press();
+                    x = touch_point.x;
+                    y = touch_point.y;
 
-	   while (terminate) {
-	     end = time(NULL);
-	     elapsed = difftime(end, start);
-	     if (elapsed >= 1.0 /* seconds */){
-	       terminate = 0;
-	       numcars = rand() % 51;
-	     }
-	     else  // No need to sleep when 90.0 seconds elapsed.
-	       usleep(50000);
-	   }
+                    if (EXIT2_BUTTON) {
+                        main_menu();
+                        return;
+                    }
+                }
 
-	   TestFilledRectangle(205 + j*40, 400-numcars*6, 235+ j*40, 400, YELLOW);
-	}
-	while(1){
+                delta = (clock() - start)/CLOCKS_PER_SEC;
+            }
 
-	    TestFilledRectangle(545, 370,755, 480, BLACK);
-	    TestFilledRectangle(550,375 , 750, 475, MAGENTA );
-	    Text(630, 420, BLACK, MAGENTA, "EXIT", 0);
-
-	    Point indicator = get_press();
-	    int x = indicator.x;
-	    int y = indicator.y;
-
-	    if (EXIT2_BUTTON) {
-	    	break;
-	    }
-
-	}
-	main_menu();
-
+            /* Draw bar on graph */
+             if (j != 10) {
+                TestFilledRectangle(205 + j*40, 400-num_cars*6, 235+ j*40, 400, YELLOW);
+            }
+        }
+    }
 }
