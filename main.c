@@ -17,6 +17,8 @@
 #include "altera_up_avalon_character_lcd.h"
 
 #define ONE_SECOND 				1000
+#define CAR_COUNT_INTERVAL		60
+#define SOFTWARE_COUNTER  		1
 
 
 int main() {
@@ -26,7 +28,7 @@ int main() {
 	// test_send_data_package();
 
 	int car_count, x, y;
-	float base_dist = read_dist();
+	//float base_dist = read_dist();
 	Point point_touched;
 
 	printf("Initializing...\n");
@@ -42,19 +44,27 @@ int main() {
 		x = point_touched.x;
 		y = point_touched.y;
 
-		if (CAR_BUTTON) {
-			count_cars_from_dist(CAR_COUNT_INTERVAL, base_dist, SOFTWARE_COUNTER);
-		}
 
-		else if (GPS_BUTTON) {
+		if (GPS_BUTTON) {
 			display_gps();
 		}
 
 		else if (CALIBRATE_BUTTON) {
 			calibrate();
-			base_dist = read_dist();
+			//base_dist = read_dist();
 			main_menu();
 		}
+
+		else if (CAR_BUTTON) {
+			printf("you pushed some dumb button");
+			main_menu();
+
+		//			if (SOFTWARE_COUNTER) {
+		//				count_cars(CAR_COUNT_INTERVAL, base_dist);
+		//			} else {
+		//				// car_count = CAR_COUNT; TODO
+		//			}
+				}
 	}
 
 	printf("\nDONE\n");

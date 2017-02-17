@@ -39,6 +39,8 @@ void startup_screen() {
     Text(250, 136, BLACK, BLUE, "WELCOME TO STREET SMART", 0);
     Text(225, 160, BLACK, BLUE, "(c) 2017, all rights reserved",0 );
 
+    usleep(1500000);
+
     for (i = 0; i <= 30; i++) {
         TestFilledRectangle(0,180, 800, 300, BLACK);
         TestFilledRectangle(0, 220, 50, 240, YELLOW);
@@ -91,36 +93,37 @@ void main_menu() {
     Text(275, 75, BLACK, YELLOW, "touch your selection", 0);
 
     /* calibration button */
-    TestFilledRectangle(145, 145, 345, 220, BLACK);
-    testButton(150, 150, 350, 225, BLACK, WHITE, RED, "" );
-    Text(180, 165, BLACK, RED, "CALIBRATE", 0);
-    Text(180, 185, BLACK, RED, "SENSOR", 0);
+    TestFilledRectangle(125, 155, 345, 255, BLACK);
+    testButton(130, 160, 350, 260, BLACK, WHITE, RED, "" );
+    Text(160, 190, BLACK, RED, "CALIBRATE", 0);
+    Text(160, 210, BLACK, RED, "SENSOR", 0);
 
     /* gps button */
-    TestFilledRectangle(145, 255, 345, 330, BLACK);
-    testButton(150, 260, 350, 335, BLACK, WHITE, RED, "" );
-    Text(180, 275, BLACK, RED, "DISPLAY GPS", 0);
-    Text(180, 295, BLACK, RED, "DATA", 0);
+    TestFilledRectangle(125, 305, 345, 405, BLACK);
+    testButton(130, 310, 350, 410, BLACK, WHITE, RED, "" );
+    Text(160, 340, BLACK, RED, "DISPLAY GPS", 0);
+    Text(160, 360, BLACK, RED, "DATA", 0);
 
     /* counter button */
-    TestFilledRectangle(145, 365, 345, 440, BLACK);
-    testButton(150, 370, 350, 445, BLACK, WHITE, RED, "" );
-    Text(180, 385, BLACK, RED, "DISPLAY CAR", 0);
-    Text(180, 405, BLACK, RED, "COUNT", 0);
+    TestFilledRectangle(445, 155, 665, 255, BLACK);
+    testButton(450, 160, 670, 260, BLACK, WHITE, RED, "" );
+    Text(480, 190, BLACK, RED, "DISPLAY CAR", 0);
+    Text(480, 210, BLACK, RED, "COUNT", 0);
 
-    TestFilledRectangle(445, 145, 645, 220, BLACK);
-    testButton(450, 150, 650, 225, BLACK, WHITE, RED, "");
-    TestFilledRectangle(445, 255, 645, 330, BLACK);
-    testButton(450, 260, 650, 335, BLACK, WHITE, RED, "");
-    TestFilledRectangle(445,365,645,440, BLACK);
-    testButton(450, 370, 650, 445, BLACK, WHITE, RED, "");
+
+    /* data button */
+    TestFilledRectangle(445, 305, 665, 405, BLACK);
+    testButton(450, 310, 670, 410, BLACK, WHITE, RED, "");
+    Text(480, 340, BLACK, RED, "PLOT DATA", 0);
+
+
 }
 
 
 void calibrate(){
     TestFilledRectangle(220, 115, 570, 365, BLACK);
     TestFilledRectangle(225, 120, 565, 360, YELLOW);
-    Text(220, 170, BLACK, YELLOW, "calibrating", 0);
+    Text(320, 170, BLACK, YELLOW, "calibrating", 0);
     Text(285, 200, BLACK, YELLOW, "distance sensor...", 0);
 
     TestFilledRectangle(245, 310 , 545, 340, BLACK);
@@ -142,31 +145,51 @@ void display_gps() {
     TestFilledRectangle(570, 115, 670, 215, BLACK);
     TestFilledRectangle(575, 120, 665, 210, MAGENTA);
     Text(595, 150, BLACK, MAGENTA, "EXIT", 0);
-    Text(300, 140, BLACK, YELLOW, "GPS LOCATION:", 0);
-    TestFilledRectangle(245, 170, 545, 200, BLACK);
-    Text(320, 220, BLACK, YELLOW, "TIME:", 0);
-    TestFilledRectangle(245, 260, 545, 290, BLACK);
+    Text(350, 130, BLACK, YELLOW, "TIME:", 0);
+    TestFilledRectangle(245, 160, 545, 190, BLACK);
+    Text(330, 200, BLACK, YELLOW, "LATITUDE:", 0);
+    TestFilledRectangle(245, 230, 545, 260, BLACK);
+    Text(330, 280, BLACK, YELLOW, "LONGITUDE:", 0);
+    TestFilledRectangle(245, 310, 545, 340, BLACK);
 
     /* Get GPS data */
     struct gps_packet *gps_pkt = gps_packet_create();
-    char local_time[9], coordinates[16];
+    char local_time[9], longitude[10], latitude[10];
 
     while(1) {
-        Point indicator = get_press();
-        int x = indicator.x;
-        int y = indicator.y;
+//        Point indicator = get_press();
+//        int x = indicator.x;
+//        int y = indicator.y;
 
         update_gps_data(gps_pkt);
         sprintf(local_time, "%s\0", gps_pkt->local_time);
-        sprintf(coordinates, "%s, %s\0", gps_pkt->latitude, gps_pkt->longitude);
+        //sprintf(latitude, "%s", gps_pkt->latitude);
+        //sprintf(longitude, "%s", gps_pkt->longitude );
+
+        printf("%s\n", gps_pkt->packetStr);
+
+        Text(251, 166, LIME, BLACK, gps_pkt->local_time, 0);
+        Text(251, 236, LIME, BLACK, gps_pkt->latitude, 0);
+        Text(251, 316, LIME, BLACK, gps_pkt->longitude, 0);
+
+        //usleep(50000);
+
+        //TestFilledRectangle(245, 160, 545, 190, BLACK);
+        //TestFilledRectangle(245, 230, 545, 260, BLACK);
+        //TestFilledRectangle(245, 310, 545, 340, BLACK);
 
         /* Display the time and coordinates */
         //TODO
+        if (screen_touched){
+        	Point indicator = get_press();
+        	int x = indicator.x;
+        	int y = indicator.y;
 
-        if (EXIT_BUTTON) {
-            free(gps_pkt);
-            main_menu();
-            return;
+			if (EXIT_BUTTON) {
+				free(gps_pkt);
+				main_menu();
+				return;
+			}
         }
     }
 }
