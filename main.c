@@ -47,18 +47,22 @@ int main() {
 		y = point_touched.y;
 
 		if (GPS_BUTTON) {
+			get_release();
 			display_gps();
 		}
 
 		else if (CALIBRATE_BUTTON) {
+			get_release();
 			calibrate();
 		}
 
 		else if (CAR_BUTTON) {
+			get_release();
 			count_cars(CAR_COUNT_INTERVAL, base_dist, SOFTWARE_COUNTER);
 		}
 
 		else if (PLOT_BUTTON){
+			get_release();
 			plot_data();
 		}
 	}

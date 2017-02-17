@@ -135,20 +135,18 @@ void display_gps() {
     Point touch_point;
     int x = 0, y = 0;
     clock_t start = clock();
-    clock_t time_delta = 1;
+    float time_delta = 1.0;
     char local_time[10];
 
     update_gps_data(gps_pkt);
 
     while(1) {
         /* Display the time and coordinates */
-        if (time_delta >= 1) {
+        if (time_delta >= 0.5) {
             update_gps_data(gps_pkt);
             start = clock();
 
             sprintf(local_time, "%s", gps_pkt->local_time);
-
-            usleep(5000);
 
             TestFilledRectangle(245, 160, 545, 190, BLACK);
             TestFilledRectangle(245, 230, 545, 260, BLACK);
@@ -160,7 +158,7 @@ void display_gps() {
         }
 
         if (screen_touched()) {
-            touch_point = get_press();
+            touch_point = get_release();
             x = touch_point.x;
             y = touch_point.y;
 
@@ -217,9 +215,9 @@ void plot_data() {
         TestFilledRectangle(180, 99, 220, 105, WHITE);
 
         /* Draw exit button */
-        TestFilledRectangle(635, 390, 800, 470, BLACK);
-        TestFilledRectangle(640, 395, 795, 475, MAGENTA );
-        Text(690, 425, BLACK, MAGENTA, "EXIT", 0);
+        // TestFilledRectangle(635, 390, 800, 470, BLACK);
+        // TestFilledRectangle(640, 395, 795, 475, MAGENTA );
+        // Text(690, 425, BLACK, MAGENTA, "EXIT", 0);
 
         /* Plot data */
         int j, delta, num_cars;
@@ -230,18 +228,13 @@ void plot_data() {
             num_cars = rand() % 51;
 
             /* Wait for 1 second (but remain responsive) */
-            while (delta < 1) {
+            while (delta < 10) {
 
                 /* Check if user pressed exit */
                 if (screen_touched()) {
-                    touch_point = get_press();
-                    x = touch_point.x;
-                    y = touch_point.y;
-
-                    if (EXIT2_BUTTON) {
-                        main_menu();
-                        return;
-                    }
+                    get_release();
+                    main_menu();
+                    return;
                 }
 
                 delta = (clock() - start)/CLOCKS_PER_SEC;

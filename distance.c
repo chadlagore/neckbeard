@@ -138,7 +138,7 @@ void count_cars(int seconds, float base_dist, int mode) {
 
 		/* Check for user action */
 		if (screen_touched()) {
-            touch_piont = get_press();
+			touch_piont = get_release();
             x = touch_piont.x;
             y = touch_piont.y;
 
