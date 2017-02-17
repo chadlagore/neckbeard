@@ -137,19 +137,28 @@ void display_gps() {
     Point touch_point;
     int x = 0, y = 0;
     clock_t start = clock();
-    clock_t time_delta;
+    clock_t time_delta = 1;
+    char local_time[10];
+
+    update_gps_data(gps_pkt);
 
     while(1) {
-        time_delta = (clock() - start)/CLOCKS_PER_SEC;
 
         /* Display the time and coordinates */
-        if (time_delta >= 5) {
+        if (time_delta >= 1) {
             update_gps_data(gps_pkt);
             start = clock();
 
-            printf("%s\n", gps_pkt->packetStr);
+            sprintf(local_time, "%s\0", gps_pkt->local_time);
 
-            Text(251, 166, LIME, BLACK, gps_pkt->local_time, 0);
+            usleep(5000);
+            //printf("%s\n", gps_pkt->packetStr);
+
+            TestFilledRectangle(245, 160, 545, 190, BLACK);
+            TestFilledRectangle(245, 230, 545, 260, BLACK);
+            TestFilledRectangle(245, 310, 545, 340, BLACK);
+
+            Text(251, 166, LIME, BLACK, local_time, 0);
             Text(251, 236, LIME, BLACK, gps_pkt->latitude, 0);
             Text(251, 316, LIME, BLACK, gps_pkt->longitude, 0);
         }
@@ -165,5 +174,29 @@ void display_gps() {
                 return;
             }
         }
+       time_delta = (clock() - start)/CLOCKS_PER_SEC;
     }
+
+}
+
+void display_cars(){
+	TestFilledRectangle(220, 115, 570, 365, BLACK);
+	    TestFilledRectangle(225, 120, 565, 360, YELLOW);
+	    TestFilledRectangle(570, 115, 670, 215, BLACK);
+	    TestFilledRectangle(575, 120, 665, 210, MAGENTA);
+	    Text(595, 150, BLACK, MAGENTA, "EXIT", 0);
+
+	    Text(320, 170, BLACK, YELLOW, "sending data", 0);
+	        Text(285, 200, BLACK, YELLOW, "to server...", 0);
+
+	        TestFilledRectangle(245, 310 , 545, 340, BLACK);
+	        int i;
+
+	        for (i = 0; i <= 10; i++){
+	            TestFilledRectangle(250, 315, 250 + 29*i , 335, BLUE );
+	            if (i == 5){
+	                // base_dist = read_dist(); TODO uncomment when sensor ready
+	            }
+	            usleep(100000);
+	        }
 }

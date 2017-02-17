@@ -72,10 +72,12 @@ void count_cars(int seconds, float base_dist, int mode) {
 	Point touch_piont;
 	char car_count_str[4], command[100];
 
+	display_cars();
+
 	while (1) {
 		if (mode == SOFTWARE_COUNTER) {
 			/* Get distance from sensor */
-			dist_read = read_dist();
+			dist_read = 14.56;//read_dist();
 
 			/*
 			 * Check if the distance we're reading got shorter
@@ -109,7 +111,7 @@ void count_cars(int seconds, float base_dist, int mode) {
 
 			update_gps_data(gps_pkt);
 			sprintf(command, "s('%s','%s','%s','%s')\0",
-				car_count_str, gps_pkt->latitude, gps_pkt->longitude, gps_pkt->utc_time);
+				"10", gps_pkt->latitude, gps_pkt->longitude, gps_pkt->utc_time);
 
 			printf("Sending command: %s\n", command);
 			sendstring_wifi(command);
