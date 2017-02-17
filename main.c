@@ -19,7 +19,6 @@
 
 #define ONE_SECOND 				1000
 #define CAR_COUNT_INTERVAL		10
-#define SOFTWARE_COUNTER  		1
 
 
 int main() {
@@ -29,7 +28,7 @@ int main() {
 	// test_send_data_package();
 
 	int car_count, x, y;
-	float base_dist = 30.0;//read_dist();
+	float base_dist = HEX0 + HEX1*10 + HEX2*100;//read_dist();
 	Point point_touched;
 
 	printf("Initializing...\n");
@@ -53,7 +52,7 @@ int main() {
 
 		else if (CALIBRATE_BUTTON) {
 			get_release();
-			calibrate();
+			calibrate(&base_dist);
 		}
 
 		else if (CAR_BUTTON) {
@@ -63,7 +62,7 @@ int main() {
 
 		else if (PLOT_BUTTON){
 			get_release();
-			plot_data();
+			plot_data(base_dist);
 		}
 	}
 

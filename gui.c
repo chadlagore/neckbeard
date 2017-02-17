@@ -1,5 +1,6 @@
 #include "gui.h"
 #include "graphics.h"
+#include "distance.h"
 #include "touch.h"
 #include <stdio.h>
 #include <unistd.h>
@@ -96,7 +97,7 @@ void main_menu() {
 }
 
 
-void calibrate(){
+void calibrate(float *base_dist){
     TestFilledRectangle(220, 115, 570, 365, BLACK);
     TestFilledRectangle(225, 120, 565, 360, YELLOW);
     Text(320, 170, BLACK, YELLOW, "calibrating", 0);
@@ -108,11 +109,12 @@ void calibrate(){
     for (i = 0; i <= 10; i++){
         TestFilledRectangle(250, 315, 250 + 29*i , 335, BLUE );
         if (i == 5){
-            // base_dist = read_dist(); TODO uncomment when sensor ready
+            *base_dist = HEX0 + HEX1*10 + HEX2*100;//read_dist(); TODO uncomment when sensor ready
         }
         usleep(100000);
     }
 
+    *base_dist = HEX0 + HEX1*10 + HEX2*100;
     main_menu();
 }
 
@@ -192,7 +194,7 @@ void display_cars(){
 }
 
 
-void plot_data() {
+void plot_data(float base_dist) {
     Point touch_point;
     int x, y;
 
@@ -201,7 +203,7 @@ void plot_data() {
         TestFilledRectangle(95, 15, 705, 465, WHITE);
         TestFilledRectangle(100, 20, 700, 460, BLACK);
         Text(250, 40, WHITE, BLACK, "Cars Per 10 Second Interval", 0);
-        Text(160, 75, WHITE, BLACK, "50", 0);
+        Text(160, 75, WHITE, BLACK, "10", 0);
         Text(106, 200, WHITE, BLACK, "Cars", 0);
         Text(106, 220, WHITE, BLACK, "Counted", 0);
         Text(340, 420, WHITE, BLACK, "Interval", 0);
@@ -225,10 +227,33 @@ void plot_data() {
         for(j = 0; j < 11; j++){
             start = clock();
             delta = 0;
-            num_cars = rand() % 51;
+            num_cars = 0;
+            int shorter_dist = 0;
+            float dist_read = 0;
 
             /* Wait for 1 second (but remain responsive) */
             while (delta < 10) {
+                /* Get distance from sensor */
+    			dist_read = HEX0 + HEX1*10 + HEX2*100;//read_dist();
+
+    			/*
+    			 * Check if the distance we're reading got shorter
+    			 * i.e. a car is passing
+    			 */
+    			if (base_dist - dist_read >= CAR_DETECTION_THRESHOLD) {
+    				shorter_dist = 1;
+    				// printf("Dist read: %f\t Base dist: %f\n", dist_read, base_dist);
+    			}
+
+    			/*
+    			 * Otherwise check if a car was passing and is done
+    			 * passing
+    			 * i.e. distance returned to base_dist
+    			 */
+    			else if (abs(base_dist - dist_read) <= 10 && shorter_dist == 1) {
+    				shorter_dist = 0;
+    				num_cars++;
+    			}
 
                 /* Check if user pressed exit */
                 if (screen_touched()) {
@@ -242,7 +267,7 @@ void plot_data() {
 
             /* Draw bar on graph */
             if (j != 10) {
-                TestFilledRectangle(205 + j*40, 400-num_cars*6, 235+ j*40, 400, YELLOW);
+                TestFilledRectangle(205 + j*40, 400-num_cars*30, 235+ j*40, 400, YELLOW);
             }
         }
     }

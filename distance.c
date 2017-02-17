@@ -10,7 +10,10 @@
 
 /* UTILITY FUNCTIONS */
 
-/* reverse:  reverse string s in place */
+/*
+ * reverse:  reverse string s in place
+ * copied from cstdlib because not supplied by eclipse
+ */
 static void reverse(char s[]) {
 	int i, j;
 	char c;
@@ -22,7 +25,10 @@ static void reverse(char s[]) {
 	}
 }
 
-/* itoa:  convert n to characters in s */
+/*
+ * itoa:  convert n to characters in s
+ * copied from cstdlib because not supplied by eclipse
+ */
 static void itoa(int n, char s[]) {
 	int i, sign;
 
@@ -43,14 +49,14 @@ static void itoa(int n, char s[]) {
 
 
 float read_dist() {
-    long actual_cycles = BIT_FACTOR * CYCLES;
-    float microseconds = actual_cycles / CLOCK_SPEED_MHZ;
+    // long actual_cycles = BIT_FACTOR * CYCLES;
+    // float microseconds = actual_cycles / CLOCK_SPEED_MHZ;
 
     // To save bits, we divide the cycle count and
     // lose resolution. Multiply back up by `BitFactor'.
     // From manual:
     //             Distance(us) in cm = us / 58;
-    return microseconds / 58;
+    return 0;//microseconds / 58;
 }
 
 
@@ -77,7 +83,7 @@ void count_cars(int seconds, float base_dist, int mode) {
 	while (1) {
 		if (mode == SOFTWARE_COUNTER) {
 			/* Get distance from sensor */
-			dist_read = 14.56;//read_dist();
+			dist_read = HEX0 + HEX1*10 + HEX2*100;//read_dist();
 
 			/*
 			 * Check if the distance we're reading got shorter
@@ -85,6 +91,7 @@ void count_cars(int seconds, float base_dist, int mode) {
 			 */
 			if (base_dist - dist_read >= CAR_DETECTION_THRESHOLD) {
 				shorter_dist = 1;
+				// printf("Dist read: %f\t Base dist: %f\n", dist_read, base_dist);
 			}
 
 			/*
@@ -92,13 +99,13 @@ void count_cars(int seconds, float base_dist, int mode) {
 			 * passing
 			 * i.e. distance returned to base_dist
 			 */
-			else if (abs(base_dist - dist_read) <= 20 && shorter_dist == 1) {
+			else if (abs(base_dist - dist_read) <= 10 && shorter_dist == 1) {
 				shorter_dist = 0;
 				car_count++;
 			}
 
 		} else {
-			car_count = CAR_COUNT;
+			// car_count = CAR_COUNT;
 		}
 
 		/* Calculate number of seconds we have been reading for */
@@ -107,7 +114,7 @@ void count_cars(int seconds, float base_dist, int mode) {
 		/* Is it time to send data yet? */
 		if (delta >= seconds) {
 			/* Convert car count to string */
-			car_count = rand() % 20;
+			// car_count = rand() % 20;
 			itoa(car_count, car_count_str);
 
 			update_gps_data(gps_pkt);
@@ -133,6 +140,7 @@ void count_cars(int seconds, float base_dist, int mode) {
 			usleep(1000000);
 			sendstring_wifi(command);
 
+			car_count = 0;
 			start = clock();
 		}
 

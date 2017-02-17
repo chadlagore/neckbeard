@@ -33,7 +33,7 @@ void main_menu();
  * this calls the calibrate function, then performs a graphical
  * flourish of sorts showing progress or something.
  */
-void calibrate();
+void calibrate(float *base_dist);
 
 /**
  * this displays a pop-up window that has the live gps, time and
@@ -54,7 +54,7 @@ void display_cars();
  */
 void gui_control(void);
 
-void plot_data();
+void plot_data(float base_dist);
 
 
 
