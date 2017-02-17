@@ -114,6 +114,22 @@ void count_cars(int seconds, float base_dist, int mode) {
 				"10", gps_pkt->latitude, gps_pkt->longitude, gps_pkt->local_time);
 
 			printf("Sending command: %s\n", command);
+			TestFilledCircle(300, 300, 20, 12);
+			TestFilledCircle(295, 300, 20, YELLOW);
+			TestFilledCircle(360, 300, 30, 12);
+			TestFilledCircle(350, 300, 30, YELLOW);
+			TestFilledCircle(440, 300, 40, 12);
+			TestFilledCircle(430, 300, 40, YELLOW);
+
+			TestFilledCircle(300, 300, 20, LIME);
+			TestFilledCircle(295, 300, 20, YELLOW);
+			usleep(1000000);
+			TestFilledCircle(360, 300, 30, LIME);
+			TestFilledCircle(350, 300, 30, YELLOW);
+			usleep(1000000);
+			TestFilledCircle(440, 300, 40, LIME);
+			TestFilledCircle(430, 300, 40, YELLOW);
+			usleep(1000000);
 			sendstring_wifi(command);
 
 			start = clock();

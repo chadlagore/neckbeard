@@ -56,6 +56,10 @@ int main() {
 		else if (CAR_BUTTON) {
 			count_cars(CAR_COUNT_INTERVAL, base_dist, SOFTWARE_COUNTER);
 		}
+
+		else if (PLOT_BUTTON){
+			plot_data();
+		}
 	}
 
 	printf("\nDONE\n");

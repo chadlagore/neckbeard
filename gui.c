@@ -17,7 +17,7 @@ void startup_screen() {
     Text(250, 136, BLACK, BLUE, "WELCOME TO STREET SMART", 0);
     Text(225, 160, BLACK, BLUE, "(c) 2017, all rights reserved",0 );
 
-    usleep(1500000);
+    usleep(2000000);
 
     for (i = 0; i <= 30; i++) {
         TestFilledRectangle(0,180, 800, 300, BLACK);
@@ -120,9 +120,9 @@ void calibrate(){
 void display_gps() {
     TestFilledRectangle(220, 115, 570, 365, BLACK);
     TestFilledRectangle(225, 120, 565, 360, YELLOW);
-    TestFilledRectangle(570, 115, 670, 215, BLACK);
-    TestFilledRectangle(575, 120, 665, 210, MAGENTA);
-    Text(595, 150, BLACK, MAGENTA, "EXIT", 0);
+    TestFilledRectangle(570, 55, 670, 155, BLACK);
+    TestFilledRectangle(575, 60, 665, 150, MAGENTA);
+    Text(595, 95, BLACK, MAGENTA, "EXIT", 0);
     Text(350, 130, BLACK, YELLOW, "TIME:", 0);
     TestFilledRectangle(245, 160, 545, 190, BLACK);
     Text(330, 200, BLACK, YELLOW, "LATITUDE:", 0);
@@ -178,21 +178,106 @@ void display_gps() {
 void display_cars(){
     TestFilledRectangle(220, 115, 570, 365, BLACK);
     TestFilledRectangle(225, 120, 565, 360, YELLOW);
-    TestFilledRectangle(570, 115, 670, 215, BLACK);
-    TestFilledRectangle(575, 120, 665, 210, MAGENTA);
-    Text(595, 150, BLACK, MAGENTA, "EXIT", 0);
+    TestFilledRectangle(570, 55, 670, 155, BLACK);
+    TestFilledRectangle(575, 60, 665, 150, MAGENTA);
+    Text(595, 95, BLACK, MAGENTA, "EXIT", 0);
 
     Text(320, 170, BLACK, YELLOW, "sending data", 0);
-    Text(285, 200, BLACK, YELLOW, "to server...", 0);
+    Text(320, 200, BLACK, YELLOW, "to server...", 0);
 
-    TestFilledRectangle(245, 310 , 545, 340, BLACK);
-    int i;
+	TestFilledCircle(300, 300, 20, 12);
+	TestFilledCircle(295, 300, 20, YELLOW);
+	TestFilledCircle(360, 300, 30, 12);
+	TestFilledCircle(350, 300, 30, YELLOW);
+	TestFilledCircle(440, 300, 40, 12);
+	TestFilledCircle(430, 300, 40, YELLOW);
 
-    for (i = 0; i <= 10; i++){
-        TestFilledRectangle(250, 315, 250 + 29*i , 335, BLUE );
-        if (i == 5){
+    //int i;
+
+
+//    //for (i = 0; i <= 10; i++){
+//    	TestFilledCircle(300, 300, 20, 12);
+//		TestFilledCircle(295, 300, 20, YELLOW);
+//		TestFilledCircle(360, 300, 30, 12);
+//		TestFilledCircle(350, 300, 30, YELLOW);
+//		TestFilledCircle(440, 300, 40, 12);
+//		TestFilledCircle(430, 300, 40, YELLOW);
+//
+//    	TestFilledCircle(300, 300, 20, LIME);
+//    	TestFilledCircle(295, 300, 20, YELLOW);
+//    	usleep(1000000);
+//    	TestFilledCircle(360, 300, 30, LIME);
+//    	TestFilledCircle(350, 300, 30, YELLOW);
+//    	usleep(1000000);
+//    	TestFilledCircle(440, 300, 40, LIME);
+//    	TestFilledCircle(430, 300, 40, YELLOW);
+//    	usleep(1000000);
+        //TestFilledRectangle(250, 315, 250 + 29*i , 335, BLUE );
+        //if (i == 5){
             // base_dist = read_dist(); TODO uncomment when sensor ready
-        }
-        usleep(100000);
-    }
+
+        //usleep(100000);
+    //}
+}
+
+void plot_data(){
+
+
+	int i = 0;
+	TestFilledRectangle(95, 15, 705, 465, WHITE);
+	TestFilledRectangle(100, 20, 700, 460, BLACK);
+	Text(250, 40, WHITE, BLACK, "cars per 10 Second Interval", 0);
+	Text(160, 75, WHITE, BLACK, "50", 0);
+	Text(106, 200, WHITE, BLACK, "cars", 0);
+	Text(106, 220, WHITE, BLACK, "counted", 0);
+
+	Text(340, 420, WHITE, BLACK, "interval", 0);
+
+
+	for (i = 0; i <= 10; i ++){
+		TestLine(200, 80+i*32, 600, 80+i*32, WHITE);
+		TestLine(200+i*40, 80, 200+i*40, 400, WHITE);
+	}
+
+	TestFilledRectangle(180, 99, 220, 105, WHITE);
+
+	int j;
+	for(j = 0; j < 10; j++){
+		time_t start, end;
+	   double elapsed;  // seconds
+	   start = time(NULL);
+	   int terminate = 1;
+
+	   int numcars = 0;
+
+	   while (terminate) {
+	     end = time(NULL);
+	     elapsed = difftime(end, start);
+	     if (elapsed >= 1.0 /* seconds */){
+	       terminate = 0;
+	       numcars = rand() % 51;
+	     }
+	     else  // No need to sleep when 90.0 seconds elapsed.
+	       usleep(50000);
+	   }
+
+	   TestFilledRectangle(205 + j*40, 400-numcars*6, 235+ j*40, 400, YELLOW);
+	}
+	while(1){
+
+	    TestFilledRectangle(545, 370,755, 480, BLACK);
+	    TestFilledRectangle(550,375 , 750, 475, MAGENTA );
+	    Text(630, 420, BLACK, MAGENTA, "EXIT", 0);
+
+	    Point indicator = get_press();
+	    int x = indicator.x;
+	    int y = indicator.y;
+
+	    if (EXIT2_BUTTON) {
+	    	break;
+	    }
+
+	}
+	main_menu();
+
 }

@@ -15,7 +15,8 @@
 #define CALIBRATE_BUTTON    (x >= 130 && x <= 350 && y >= 155 && y <= 255)
 #define GPS_BUTTON          (x >= 140 && x <= 350 && y >= 310 && y <= 410)
 #define CAR_BUTTON          (x >= 450 && x <= 670 && y >= 160 && y <= 260)
-#define EXIT_BUTTON         (x >= 570 && x <= 670 && y >= 115 && y <= 215)
+#define EXIT_BUTTON         (x >= 570 && x <= 670 && y >= 60  && y <= 150)
+#define EXIT2_BUTTON 		(x >= 550 && x <= 750 && y >= 375 && y <= 475)
 #define PLOT_BUTTON         (x >= 450 && x <= 665 && y >= 310 && y <= 410)
 /**
  * this displays a crosswalk and introduces the app, fake
@@ -52,6 +53,8 @@ void display_cars();
  * Respond to user actions on the touch screen
  */
 void gui_control(void);
+
+void plot_data();
 
 
 
