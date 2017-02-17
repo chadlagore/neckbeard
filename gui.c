@@ -3,31 +3,6 @@
 #include <unistd.h>
 
 
-void gui_control() {
-    Point indicator = get_press();
-    int x = indicator.x;
-    int y = indicator.y;
-
-    if (CALIBRATE_BUTTON){
-        calibrate();
-        main_menu();
-    }
-    if (GPS_BUTTON){
-        display_gps();
-
-        while(1) {
-            indicator = get_press();
-            x = indicator.x;
-            y = indicator.y;
-
-            if (EXIT_BUTTON){
-                main_menu();
-            }
-        }
-    }
-}
-
-
 void startup_screen() {
 
     int i;

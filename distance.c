@@ -6,6 +6,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 /* UTILITY FUNCTIONS */
 
@@ -67,7 +68,7 @@ void count_cars_from_dist(int seconds, float base_dist, int mode) {
 	clock_t start = clock();
 	clock_t delta;
 	float dist_read;
-	int car_count = 0, x, y;
+	int car_count = 0, x, y, shorter_dist = 0;
 	Point touch_piont;
 	char car_count_str[4], command[100];
 
@@ -77,10 +78,24 @@ void count_cars_from_dist(int seconds, float base_dist, int mode) {
 			/* Get distance from sensor */
 			dist_read = read_dist();
 
-			/* Check if there is a car passing based on dist */
+			/*
+			 * Check if the distance we're reading got shorter
+			 * i.e. a car is passing
+			 */
 			if (base_dist - dist_read >= CAR_DETECTION_THRESHOLD) {
+				shorter_dist = 1;
+			}
+
+			/*
+			 * Otherwise check if a car was passing and is done
+			 * passing
+			 * i.e. distance returned to base_dist
+			 */
+			else if (abs(base_dist - dist) <= 20) {
+				shorter_dist = 0;
 				car_count++;
 			}
+
 		} else {
 			car_count = CAR_COUNT;
 		}
