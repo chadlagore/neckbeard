@@ -123,7 +123,7 @@ char *utc_to_local(struct gps_packet *pkt) {
 	int seconds_l = ((char) pkt->utc_time[5] - '0');
 
 	/* Add 8 hours to UTC time for Vancouver time */
-	int hours = (hours_h*10 + hours_l + 8) % 24;
+	int hours = (hours_h*10 + hours_l + 4) % 24;
 	hours_h = hours / 10;
 	hours_l = hours % 10;
 

@@ -59,9 +59,10 @@ float read_dist() {
  * It needs to be passed the base_dist, which is the
  * distance from the sensor to the ground when there is
  * no car passing.
+ * mode must be either HARDWARE_COUNTER or SOFTWARE_COUNTER
  * THIS FUNCTION WILL BLOCK UNTIL THE USER CLICKS EXIT
  */
-void count_cars(int seconds, float base_dist) {
+void count_cars_from_dist(int seconds, float base_dist, int mode) {
 	struct gps_packet *gps_pkt = gps_packet_create();
 	clock_t start = clock();
 	clock_t delta;
@@ -72,12 +73,16 @@ void count_cars(int seconds, float base_dist) {
 
 
 	while (1) {
-		/* Get distance from sensor */
-		dist_read = read_dist();
+		if (mode == SOFTWARE_COUNTER) {
+			/* Get distance from sensor */
+			dist_read = read_dist();
 
-		/* Check if there is a car passing based on dist */
-		if (base_dist - dist_read >= CAR_DETECTION_THRESHOLD) {
-			car_count++;
+			/* Check if there is a car passing based on dist */
+			if (base_dist - dist_read >= CAR_DETECTION_THRESHOLD) {
+				car_count++;
+			}
+		} else {
+			car_count = CAR_COUNT;
 		}
 
 		/* Calculate number of seconds we have been reading for */

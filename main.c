@@ -17,8 +17,6 @@
 #include "altera_up_avalon_character_lcd.h"
 
 #define ONE_SECOND 				1000
-#define CAR_COUNT_INTERVAL		60
-#define SOFTWARE_COUNTER  		1
 
 
 int main() {
@@ -45,11 +43,7 @@ int main() {
 		y = point_touched.y;
 
 		if (CAR_BUTTON) {
-			if (SOFTWARE_COUNTER) {
-				count_cars(CAR_COUNT_INTERVAL, base_dist);
-			} else {
-				// car_count = CAR_COUNT; TODO
-			}
+			count_cars_from_dist(CAR_COUNT_INTERVAL, base_dist, SOFTWARE_COUNTER);
 		}
 
 		else if (GPS_BUTTON) {

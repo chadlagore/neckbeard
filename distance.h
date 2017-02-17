@@ -18,6 +18,9 @@
 
 /* Minimum distance (cm) we must read to be able to say we detected a car */
 #define CAR_DETECTION_THRESHOLD     100
+#define HARDWARE_COUNTER            1
+#define SOFTWARE_COUNTER            0
+#define CAR_COUNT_INTERVAL		    60
 
 /* Masks for status register */
 #define DISTANCE_TX_MASK 0x02
@@ -26,6 +29,6 @@
 void init_distance(void);
 int get_distance(void);
 float read_dist(void);
-void count_cars(int seconds, float base_dist);
+void count_cars_from_dist(int seconds, float base_dist);
 
 #endif /* _DISTANCE_H_ */
