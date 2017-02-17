@@ -92,7 +92,7 @@ void count_cars(int seconds, float base_dist, int mode) {
 			 * passing
 			 * i.e. distance returned to base_dist
 			 */
-			else if (abs(base_dist - dist_read) <= 20) {
+			else if (abs(base_dist - dist_read) <= 20 && shorter_dist == 1) {
 				shorter_dist = 0;
 				car_count++;
 			}
@@ -111,7 +111,7 @@ void count_cars(int seconds, float base_dist, int mode) {
 
 			update_gps_data(gps_pkt);
 			sprintf(command, "s('%s','%s','%s','%s')\0",
-				"10", gps_pkt->latitude, gps_pkt->longitude, gps_pkt->utc_time);
+				"10", gps_pkt->latitude, gps_pkt->longitude, gps_pkt->local_time);
 
 			printf("Sending command: %s\n", command);
 			sendstring_wifi(command);
@@ -126,7 +126,7 @@ void count_cars(int seconds, float base_dist, int mode) {
             y = touch_piont.y;
 
             if (EXIT_BUTTON) {
-                free(gps_pkt);
+				gps_packet_destroy(gps_pkt);
                 main_menu();
                 return;
             }

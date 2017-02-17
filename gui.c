@@ -93,8 +93,6 @@ void main_menu() {
     TestFilledRectangle(445, 305, 665, 405, BLACK);
     testButton(450, 310, 670, 410, BLACK, WHITE, RED, "");
     Text(480, 340, BLACK, RED, "PLOT DATA", 0);
-
-
 }
 
 
@@ -143,16 +141,14 @@ void display_gps() {
     update_gps_data(gps_pkt);
 
     while(1) {
-
         /* Display the time and coordinates */
         if (time_delta >= 1) {
             update_gps_data(gps_pkt);
             start = clock();
 
-            sprintf(local_time, "%s\0", gps_pkt->local_time);
+            sprintf(local_time, "%s", gps_pkt->local_time);
 
             usleep(5000);
-            //printf("%s\n", gps_pkt->packetStr);
 
             TestFilledRectangle(245, 160, 545, 190, BLACK);
             TestFilledRectangle(245, 230, 545, 260, BLACK);
@@ -169,34 +165,34 @@ void display_gps() {
             y = touch_point.y;
 
             if (EXIT_BUTTON) {
-                free(gps_pkt);
+                gps_packet_destroy(gps_pkt);
                 main_menu();
                 return;
             }
         }
-       time_delta = (clock() - start)/CLOCKS_PER_SEC;
+        time_delta = (clock() - start)/CLOCKS_PER_SEC;
     }
 
 }
 
 void display_cars(){
-	TestFilledRectangle(220, 115, 570, 365, BLACK);
-	    TestFilledRectangle(225, 120, 565, 360, YELLOW);
-	    TestFilledRectangle(570, 115, 670, 215, BLACK);
-	    TestFilledRectangle(575, 120, 665, 210, MAGENTA);
-	    Text(595, 150, BLACK, MAGENTA, "EXIT", 0);
+    TestFilledRectangle(220, 115, 570, 365, BLACK);
+    TestFilledRectangle(225, 120, 565, 360, YELLOW);
+    TestFilledRectangle(570, 115, 670, 215, BLACK);
+    TestFilledRectangle(575, 120, 665, 210, MAGENTA);
+    Text(595, 150, BLACK, MAGENTA, "EXIT", 0);
 
-	    Text(320, 170, BLACK, YELLOW, "sending data", 0);
-	        Text(285, 200, BLACK, YELLOW, "to server...", 0);
+    Text(320, 170, BLACK, YELLOW, "sending data", 0);
+    Text(285, 200, BLACK, YELLOW, "to server...", 0);
 
-	        TestFilledRectangle(245, 310 , 545, 340, BLACK);
-	        int i;
+    TestFilledRectangle(245, 310 , 545, 340, BLACK);
+    int i;
 
-	        for (i = 0; i <= 10; i++){
-	            TestFilledRectangle(250, 315, 250 + 29*i , 335, BLUE );
-	            if (i == 5){
-	                // base_dist = read_dist(); TODO uncomment when sensor ready
-	            }
-	            usleep(100000);
-	        }
+    for (i = 0; i <= 10; i++){
+        TestFilledRectangle(250, 315, 250 + 29*i , 335, BLUE );
+        if (i == 5){
+            // base_dist = read_dist(); TODO uncomment when sensor ready
+        }
+        usleep(100000);
+    }
 }

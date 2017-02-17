@@ -55,7 +55,6 @@ int main() {
 
 		else if (CAR_BUTTON) {
 			count_cars(CAR_COUNT_INTERVAL, base_dist, SOFTWARE_COUNTER);
-
 		}
 	}
 

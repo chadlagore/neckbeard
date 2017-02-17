@@ -41,6 +41,7 @@ void gps_send_char(char c);
 char gps_receive_char(void);
 
 struct gps_packet *gps_packet_create(void);
+void gps_packet_destroy(struct gps_packet *pkt);
 void update_gps_data(struct gps_packet *gps_pkt);
 void receive_packet(struct gps_packet *gps_pkt);
 int is_GGA(struct gps_packet *gps_pkt);
