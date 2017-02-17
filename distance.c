@@ -11,7 +11,7 @@
 /* UTILITY FUNCTIONS */
 
 /* reverse:  reverse string s in place */
-void reverse(char s[]) {
+static void reverse(char s[]) {
 	int i, j;
 	char c;
 
@@ -23,7 +23,7 @@ void reverse(char s[]) {
 }
 
 /* itoa:  convert n to characters in s */
-void itoa(int n, char s[]) {
+static void itoa(int n, char s[]) {
 	int i, sign;
 
 	if ((sign = n) < 0)  /* record sign */
@@ -63,7 +63,7 @@ float read_dist() {
  * mode must be either HARDWARE_COUNTER or SOFTWARE_COUNTER
  * THIS FUNCTION WILL BLOCK UNTIL THE USER CLICKS EXIT
  */
-void count_cars_from_dist(int seconds, float base_dist, int mode) {
+void count_cars(int seconds, float base_dist, int mode) {
 	struct gps_packet *gps_pkt = gps_packet_create();
 	clock_t start = clock();
 	clock_t delta;
@@ -91,7 +91,7 @@ void count_cars_from_dist(int seconds, float base_dist, int mode) {
 			 * passing
 			 * i.e. distance returned to base_dist
 			 */
-			else if (abs(base_dist - dist) <= 20) {
+			else if (abs(base_dist - dist_read) <= 20) {
 				shorter_dist = 0;
 				car_count++;
 			}

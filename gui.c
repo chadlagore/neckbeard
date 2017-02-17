@@ -1,6 +1,9 @@
 #include "gui.h"
+#include "graphics.h"
+#include "touch.h"
 #include <stdio.h>
 #include <unistd.h>
+#include <time.h>
 
 
 void startup_screen() {
@@ -125,18 +128,27 @@ void display_gps() {
     /* Get GPS data */
     struct gps_packet *gps_pkt = gps_packet_create();
     char local_time[9], coordinates[16];
+    Point touch_piont;
+    int x, y;
+    clock_t start = clock();
+    clock_t time_delta;
 
     while(1) {
-        Point indicator = get_press();
-        int x = indicator.x;
-        int y = indicator.y;
+        time_delta = (clock() - start)/CLOCKS_PER_SEC;
 
-        update_gps_data(gps_pkt);
-        sprintf(local_time, "%s\0", gps_pkt->local_time);
-        sprintf(coordinates, "%s, %s\0", gps_pkt->latitude, gps_pkt->longitude);
+        if (time_delta >= 5) {
+            update_gps_data(gps_pkt);
+            sprintf(local_time, "%s\0", gps_pkt->local_time);
+            sprintf(coordinates, "%s, %s\0", gps_pkt->latitude, gps_pkt->longitude);
+            start = clock();
+        }
 
         /* Display the time and coordinates */
-        //TODO
+        // TODO
+
+        touch_piont = get_press();
+        x = touch_piont.x;
+        y = touch_piont.y;
 
         if (EXIT_BUTTON) {
             free(gps_pkt);
