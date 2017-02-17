@@ -5,7 +5,10 @@
 #include <unistd.h>
 #include <time.h>
 
-
+/**
+ * this displays a crosswalk and introduces the app, fake
+ * copyright info and stuff.
+ */
 void startup_screen() {
 
     int i;
@@ -51,7 +54,9 @@ void startup_screen() {
     }
 }
 
-
+/**
+ * this function draws the main menu and the buttons
+ */
 void main_menu() {
     testClearScreen(BLUE);
 
@@ -95,7 +100,10 @@ void main_menu() {
     Text(480, 340, BLACK, RED, "PLOT DATA", 0);
 }
 
-
+/**
+ * this calls the calibrate function, then performs a graphical
+ * flourish of sorts showing progress.
+ */
 void calibrate(){
     TestFilledRectangle(220, 115, 570, 365, BLACK);
     TestFilledRectangle(225, 120, 565, 360, YELLOW);
@@ -116,7 +124,12 @@ void calibrate(){
     main_menu();
 }
 
-
+/**
+ * this displays a pop-up window that has the live gps, time and
+ * car counting data. this is an event loop that is constantly
+ * updating the graphics with the information. this will include an exit
+ * button to leave the function.
+ */
 void display_gps() {
     TestFilledRectangle(220, 115, 570, 365, BLACK);
     TestFilledRectangle(225, 120, 565, 360, YELLOW);
@@ -173,7 +186,12 @@ void display_gps() {
 
 }
 
+/**
+ * opens a pop-up window that displays the amount of cars
+ * that have driven past in real time.
+ */
 void display_cars(){
+
     TestFilledRectangle(220, 115, 570, 365, BLACK);
     TestFilledRectangle(225, 120, 565, 360, YELLOW);
     TestFilledRectangle(570, 55, 670, 155, BLACK);
@@ -191,7 +209,11 @@ void display_cars(){
     TestFilledCircle(430, 300, 40, YELLOW);
 }
 
-
+/**
+ * Creates a bar graph which represents the amount of
+ * cars that passed by over the course of a 10-second
+ * interval
+ */
 void plot_data() {
     Point touch_point;
     int x, y;
@@ -214,14 +236,10 @@ void plot_data() {
 
         TestFilledRectangle(180, 99, 220, 105, WHITE);
 
-        /* Draw exit button */
-        // TestFilledRectangle(635, 390, 800, 470, BLACK);
-        // TestFilledRectangle(640, 395, 795, 475, MAGENTA );
-        // Text(690, 425, BLACK, MAGENTA, "EXIT", 0);
-
         /* Plot data */
         int j, delta, num_cars;
         clock_t start;
+
         for(j = 0; j < 11; j++){
             start = clock();
             delta = 0;
