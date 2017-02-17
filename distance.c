@@ -107,11 +107,12 @@ void count_cars(int seconds, float base_dist, int mode) {
 		/* Is it time to send data yet? */
 		if (delta >= seconds) {
 			/* Convert car count to string */
+			car_count = rand() % 20;
 			itoa(car_count, car_count_str);
 
 			update_gps_data(gps_pkt);
 			sprintf(command, "s('%s','%s','%s','%s')\0",
-				"10", gps_pkt->latitude, gps_pkt->longitude, gps_pkt->local_time);
+				car_count_str, gps_pkt->latitude, gps_pkt->longitude, gps_pkt->utc_time);
 
 			printf("Sending command: %s\n", command);
 			TestFilledCircle(300, 300, 20, 12);

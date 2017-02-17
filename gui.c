@@ -85,8 +85,8 @@ void main_menu() {
     /* counter button */
     TestFilledRectangle(445, 155, 665, 255, BLACK);
     testButton(450, 160, 670, 260, BLACK, WHITE, RED, "" );
-    Text(480, 190, BLACK, RED, "DISPLAY CAR", 0);
-    Text(480, 210, BLACK, RED, "COUNT", 0);
+    Text(480, 190, BLACK, RED, "SEND DATA", 0);
+    Text(480, 210, BLACK, RED, "TO SERVER", 0);
 
 
     /* data button */
@@ -197,7 +197,6 @@ void display_cars(){
 void plot_data() {
     Point touch_point;
     int x, y;
-    srand(time(NULL));
 
     while (1) {
         /* Draw Graph */
@@ -249,7 +248,7 @@ void plot_data() {
             }
 
             /* Draw bar on graph */
-             if (j != 10) {
+            if (j != 10) {
                 TestFilledRectangle(205 + j*40, 400-num_cars*6, 235+ j*40, 400, YELLOW);
             }
         }

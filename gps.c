@@ -136,14 +136,14 @@ char *utc_to_local(struct gps_packet *pkt) {
 	int seconds_l = ((char) pkt->utc_time[5] - '0');
 
 	/* Add 8 hours to UTC time for Vancouver time */
-	int hours = (hours_h*10 + hours_l + 4) % 24;
+	int hours = (hours_h*10 + hours_l + 16) % 24;
 	hours_h = hours / 10;
 	hours_l = hours % 10;
 
 	/* Write the values to the hex displays */
-	*HEX4_5 = (hours_h << 4) | hours_l;
-	*HEX2_3 = (minutes_h << 4) | minutes_l;
-	*HEX0_1 = (seconds_h << 4) | seconds_l;
+	// *HEX4_5 = (hours_h << 4) | hours_l;
+	// *HEX2_3 = (minutes_h << 4) | minutes_l;
+	// *HEX0_1 = (seconds_h << 4) | seconds_l;
 
 	sprintf(pkt->local_time, "%d%d:%d%d:%d%d\0", hours_h, hours_l, minutes_h, minutes_l, seconds_h, seconds_l);
 	return pkt->local_time;

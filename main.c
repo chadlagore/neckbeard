@@ -38,6 +38,7 @@ int main() {
 	init_touch();
 	startup_screen();
 	main_menu();
+	srand(time(NULL));
 	printf("Done Initializing\n");
 
 	while (1) {
