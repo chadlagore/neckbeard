@@ -6,11 +6,12 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 /* UTILITY FUNCTIONS */
 
 /* reverse:  reverse string s in place */
-void reverse(char s[]) {
+static void reverse(char s[]) {
 	int i, j;
 	char c;
 
@@ -22,7 +23,7 @@ void reverse(char s[]) {
 }
 
 /* itoa:  convert n to characters in s */
-void itoa(int n, char s[]) {
+static void itoa(int n, char s[]) {
 	int i, sign;
 
 	if ((sign = n) < 0)  /* record sign */
@@ -62,25 +63,38 @@ float read_dist() {
  * mode must be either HARDWARE_COUNTER or SOFTWARE_COUNTER
  * THIS FUNCTION WILL BLOCK UNTIL THE USER CLICKS EXIT
  */
-void count_cars_from_dist(int seconds, float base_dist, int mode) {
+void count_cars(int seconds, float base_dist, int mode) {
 	struct gps_packet *gps_pkt = gps_packet_create();
 	clock_t start = clock();
 	clock_t delta;
 	float dist_read;
-	int car_count = 0, x, y;
+	int car_count = 0, x, y, shorter_dist = 0;
 	Point touch_piont;
 	char car_count_str[4], command[100];
-
 
 	while (1) {
 		if (mode == SOFTWARE_COUNTER) {
 			/* Get distance from sensor */
 			dist_read = read_dist();
 
-			/* Check if there is a car passing based on dist */
+			/*
+			 * Check if the distance we're reading got shorter
+			 * i.e. a car is passing
+			 */
 			if (base_dist - dist_read >= CAR_DETECTION_THRESHOLD) {
+				shorter_dist = 1;
+			}
+
+			/*
+			 * Otherwise check if a car was passing and is done
+			 * passing
+			 * i.e. distance returned to base_dist
+			 */
+			else if (abs(base_dist - dist_read) <= 20) {
+				shorter_dist = 0;
 				car_count++;
 			}
+
 		} else {
 			car_count = CAR_COUNT;
 		}
@@ -88,7 +102,8 @@ void count_cars_from_dist(int seconds, float base_dist, int mode) {
 		/* Calculate number of seconds we have been reading for */
 		delta = (clock() - start)/CLOCKS_PER_SEC;
 
-		if (delta < seconds) {
+		/* Is it time to send data yet? */
+		if (delta >= seconds) {
 			/* Convert car count to string */
 			itoa(car_count, car_count_str);
 
@@ -103,15 +118,17 @@ void count_cars_from_dist(int seconds, float base_dist, int mode) {
 		}
 
 		/* Check for user action */
-		touch_piont = get_press();
-		x = touch_piont.x;
-		y = touch_piont.y;
+		if (screen_touched()) {
+            touch_piont = get_press();
+            x = touch_piont.x;
+            y = touch_piont.y;
 
-		if (EXIT_BUTTON) {
-			free(gps_pkt);
-			main_menu();
-			return;
-		}
+            if (EXIT_BUTTON) {
+                free(gps_pkt);
+                main_menu();
+                return;
+            }
+        }
 	}
 }
 

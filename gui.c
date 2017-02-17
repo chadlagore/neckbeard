@@ -1,31 +1,9 @@
 #include "gui.h"
+#include "graphics.h"
+#include "touch.h"
 #include <stdio.h>
 #include <unistd.h>
-
-
-void gui_control() {
-    Point indicator = get_press();
-    int x = indicator.x;
-    int y = indicator.y;
-
-    if (CALIBRATE_BUTTON){
-        calibrate();
-        main_menu();
-    }
-    if (GPS_BUTTON){
-        display_gps();
-
-        while(1) {
-            indicator = get_press();
-            x = indicator.x;
-            y = indicator.y;
-
-            if (EXIT_BUTTON){
-                main_menu();
-            }
-        }
-    }
-}
+#include <time.h>
 
 
 void startup_screen() {
@@ -132,10 +110,12 @@ void calibrate(){
     for (i = 0; i <= 10; i++){
         TestFilledRectangle(250, 315, 250 + 29*i , 335, BLUE );
         if (i == 5){
-            usleep(300000);
+            // base_dist = read_dist(); TODO uncomment when sensor ready
         }
         usleep(100000);
     }
+
+    main_menu();
 }
 
 
@@ -154,42 +134,36 @@ void display_gps() {
 
     /* Get GPS data */
     struct gps_packet *gps_pkt = gps_packet_create();
-    char local_time[9], longitude[10], latitude[10];
+    Point touch_point;
+    int x = 0, y = 0;
+    clock_t start = clock();
+    clock_t time_delta;
 
     while(1) {
-//        Point indicator = get_press();
-//        int x = indicator.x;
-//        int y = indicator.y;
-
-        update_gps_data(gps_pkt);
-        sprintf(local_time, "%s\0", gps_pkt->local_time);
-        //sprintf(latitude, "%s", gps_pkt->latitude);
-        //sprintf(longitude, "%s", gps_pkt->longitude );
-
-        printf("%s\n", gps_pkt->packetStr);
-
-        Text(251, 166, LIME, BLACK, gps_pkt->local_time, 0);
-        Text(251, 236, LIME, BLACK, gps_pkt->latitude, 0);
-        Text(251, 316, LIME, BLACK, gps_pkt->longitude, 0);
-
-        //usleep(50000);
-
-        //TestFilledRectangle(245, 160, 545, 190, BLACK);
-        //TestFilledRectangle(245, 230, 545, 260, BLACK);
-        //TestFilledRectangle(245, 310, 545, 340, BLACK);
+        time_delta = (clock() - start)/CLOCKS_PER_SEC;
 
         /* Display the time and coordinates */
-        //TODO
-        if (screen_touched){
-        	Point indicator = get_press();
-        	int x = indicator.x;
-        	int y = indicator.y;
+        if (time_delta >= 5) {
+            update_gps_data(gps_pkt);
+            start = clock();
 
-			if (EXIT_BUTTON) {
-				free(gps_pkt);
-				main_menu();
-				return;
-			}
+            printf("%s\n", gps_pkt->packetStr);
+
+            Text(251, 166, LIME, BLACK, gps_pkt->local_time, 0);
+            Text(251, 236, LIME, BLACK, gps_pkt->latitude, 0);
+            Text(251, 316, LIME, BLACK, gps_pkt->longitude, 0);
+        }
+
+        if (screen_touched()) {
+            touch_point = get_press();
+            x = touch_point.x;
+            y = touch_point.y;
+
+            if (EXIT_BUTTON) {
+                free(gps_pkt);
+                main_menu();
+                return;
+            }
         }
     }
 }

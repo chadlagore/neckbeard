@@ -47,11 +47,5 @@ void display_gps();
  */
 void display_cars();
 
-/**
- * Respond to user actions on the touch screen
- */
-void gui_control(void);
-
-
 
 #endif /* _GUI_H_ */

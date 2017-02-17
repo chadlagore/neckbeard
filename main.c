@@ -14,6 +14,7 @@
 #include "Fill.h"
 #include "tests.h"
 #include "gui.h"
+#include "distance.h"
 #include "altera_up_avalon_character_lcd.h"
 
 #define ONE_SECOND 				1000
@@ -28,7 +29,7 @@ int main() {
 	// test_send_data_package();
 
 	int car_count, x, y;
-	//float base_dist = read_dist();
+	float base_dist = read_dist();
 	Point point_touched;
 
 	printf("Initializing...\n");
@@ -44,27 +45,17 @@ int main() {
 		x = point_touched.x;
 		y = point_touched.y;
 
-
 		if (GPS_BUTTON) {
 			display_gps();
 		}
 
 		else if (CALIBRATE_BUTTON) {
 			calibrate();
-			//base_dist = read_dist();
-			main_menu();
 		}
 
 		else if (CAR_BUTTON) {
-			printf("you pushed some dumb button");
-			main_menu();
-
-		//			if (SOFTWARE_COUNTER) {
-		//				count_cars(CAR_COUNT_INTERVAL, base_dist);
-		//			} else {
-		//				// car_count = CAR_COUNT; TODO
-		//			}
-				}
+			count_cars(CAR_COUNT_INTERVAL, base_dist, SOFTWARE_COUNTER);
+		}
 	}
 
 	printf("\nDONE\n");
