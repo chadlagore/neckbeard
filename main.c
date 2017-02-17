@@ -49,8 +49,6 @@ int main() {
 
 		else if (CALIBRATE_BUTTON) {
 			calibrate();
-			base_dist = read_dist();
-			main_menu();
 		}
 
 		else if (CAR_BUTTON) {

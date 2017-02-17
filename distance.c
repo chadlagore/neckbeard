@@ -72,7 +72,6 @@ void count_cars(int seconds, float base_dist, int mode) {
 	Point touch_piont;
 	char car_count_str[4], command[100];
 
-
 	while (1) {
 		if (mode == SOFTWARE_COUNTER) {
 			/* Get distance from sensor */
@@ -103,7 +102,8 @@ void count_cars(int seconds, float base_dist, int mode) {
 		/* Calculate number of seconds we have been reading for */
 		delta = (clock() - start)/CLOCKS_PER_SEC;
 
-		if (delta < seconds) {
+		/* Is it time to send data yet? */
+		if (delta >= seconds) {
 			/* Convert car count to string */
 			itoa(car_count, car_count_str);
 
@@ -118,15 +118,17 @@ void count_cars(int seconds, float base_dist, int mode) {
 		}
 
 		/* Check for user action */
-		touch_piont = get_press();
-		x = touch_piont.x;
-		y = touch_piont.y;
+		if (screen_touched()) {
+            touch_piont = get_press();
+            x = touch_piont.x;
+            y = touch_piont.y;
 
-		if (EXIT_BUTTON) {
-			free(gps_pkt);
-			main_menu();
-			return;
-		}
+            if (EXIT_BUTTON) {
+                free(gps_pkt);
+                main_menu();
+                return;
+            }
+        }
 	}
 }
 

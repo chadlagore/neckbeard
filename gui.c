@@ -107,10 +107,12 @@ void calibrate(){
     for (i = 0; i <= 10; i++){
         TestFilledRectangle(250, 315, 250 + 29*i , 335, BLUE );
         if (i == 5){
-            usleep(300000);
+            // base_dist = read_dist(); TODO uncomment when sensor ready
         }
         usleep(100000);
     }
+
+    main_menu();
 }
 
 
@@ -129,31 +131,33 @@ void display_gps() {
     struct gps_packet *gps_pkt = gps_packet_create();
     char local_time[9], coordinates[16];
     Point touch_piont;
-    int x, y;
+    int x = 0, y = 0;
     clock_t start = clock();
     clock_t time_delta;
 
     while(1) {
         time_delta = (clock() - start)/CLOCKS_PER_SEC;
 
+        /* Display the time and coordinates */
         if (time_delta >= 5) {
             update_gps_data(gps_pkt);
-            sprintf(local_time, "%s\0", gps_pkt->local_time);
-            sprintf(coordinates, "%s, %s\0", gps_pkt->latitude, gps_pkt->longitude);
+            sprintf(local_time, "%s", gps_pkt->local_time);
+            sprintf(coordinates, "%s, %s", gps_pkt->latitude, gps_pkt->longitude);
             start = clock();
+
+            // TODO
         }
 
-        /* Display the time and coordinates */
-        // TODO
+        if (screen_touched()) {
+            touch_piont = get_press();
+            x = touch_piont.x;
+            y = touch_piont.y;
 
-        touch_piont = get_press();
-        x = touch_piont.x;
-        y = touch_piont.y;
-
-        if (EXIT_BUTTON) {
-            free(gps_pkt);
-            main_menu();
-            return;
+            if (EXIT_BUTTON) {
+                free(gps_pkt);
+                main_menu();
+                return;
+            }
         }
     }
 }
