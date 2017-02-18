@@ -91,7 +91,6 @@ void count_cars(int seconds, float base_dist, int mode) {
 			 */
 			if (base_dist - dist_read >= CAR_DETECTION_THRESHOLD) {
 				shorter_dist = 1;
-				// printf("Dist read: %f\t Base dist: %f\n", dist_read, base_dist);
 			}
 
 			/*
@@ -114,7 +113,6 @@ void count_cars(int seconds, float base_dist, int mode) {
 		/* Is it time to send data yet? */
 		if (delta >= seconds) {
 			/* Convert car count to string */
-			// car_count = rand() % 20;
 			itoa(car_count, car_count_str);
 
 			update_gps_data(gps_pkt);
@@ -157,24 +155,4 @@ void count_cars(int seconds, float base_dist, int mode) {
             }
         }
 	}
-}
-
-
-// initialize
-void init_distance(void) {
-	DISTANCE_BAUD = 0x1F;
-}
-
-int get_distance(void)
-{
-	//while ((DISTANCE_STATUS & 0x2) != 0x2);
-	return DISTANCE_RXDATA;
-}
-
-int test_for_distance_data(void) {
-	 // Test Rx bit in 6850 serial comms chip status register
-	 // if RX bit is set return TRUE, otherwise return FALSE
-	volatile unsigned short int status = (volatile unsigned short int) DISTANCE_STATUS;
-	return status & 0x1;
-
 }

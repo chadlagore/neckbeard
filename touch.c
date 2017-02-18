@@ -9,8 +9,8 @@
  */
 void init_touch(void) {
 
-	AR1100_CONTROL = 0x15; //perhaps this should go first and 0x03 shouldn't happpen... check datasheet
-	AR1100_BAUD = 0x05; //anything >4 means a baud rate of 9600 (recommended by datasheet)
+	AR1100_CONTROL = 0x15; 
+	AR1100_BAUD = 0x05; 
 
 	usleep(5000);
 

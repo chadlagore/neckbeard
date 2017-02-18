@@ -25,9 +25,6 @@ char getchar_wifi(void) {
 }
 
 void sendstring_wifi(const char *string) {
-    // putchar_wifi('\n');
-    // WAIT_FOR_WIFI_READY
-
     int i;
     for (i = 0; string[i] != '\0'; i++) {
         putchar_wifi(string[i]);

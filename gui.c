@@ -190,7 +190,7 @@ void display_gps() {
 }
 
 /**
- * opens a pop-up window that displays the amount of cars
+ * Opens a pop-up window that displays the amount of cars
  * that have driven past in real time.
  */
 void display_cars(){

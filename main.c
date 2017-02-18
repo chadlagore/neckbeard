@@ -3,7 +3,6 @@
 #include <math.h>
 #include <time.h>
 #include <unistd.h>
-#include "nios_system.h"
 #include "touch.h"
 #include "bluetooth.h"
 #include "graphics.h"
@@ -17,7 +16,7 @@
 #include "distance.h"
 #include "altera_up_avalon_character_lcd.h"
 
-#define ONE_SECOND 				1000
+
 #define CAR_COUNT_INTERVAL		10
 
 

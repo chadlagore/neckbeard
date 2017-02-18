@@ -30,8 +30,6 @@
 #define DISTANCE_TX_MASK 0x02
 #define DISTANCE_RX_MASK 0x01
 
-void init_distance(void);
-int get_distance(void);
 float read_dist(void);
 void count_cars(int seconds, float base_dist, int mode);
 

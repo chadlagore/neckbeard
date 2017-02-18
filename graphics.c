@@ -14,7 +14,6 @@
 * Note colour is a byte and represents a palette number (0-255) not a 24 bit RGB value
 ********************************************************************************************/
 void WriteAPixel(int x, int y, int Colour) {
-
 	WAIT_FOR_GRAPHICS;				// is graphics ready for new command
 
 	GraphicsX1Reg = x;				// write coords to x1, y1
@@ -28,9 +27,7 @@ void WriteAPixel(int x, int y, int Colour) {
 * Note returned colour is a byte and represents a palette number (0-255) not a 24 bit RGB value
 *********************************************************************************************/
 
-int ReadAPixel(int x, int y)
-{
-
+int ReadAPixel(int x, int y) {
 	WAIT_FOR_GRAPHICS;					// is graphics ready for new command
 
 	GraphicsX1Reg = x;					// write coords to x1, y1
@@ -46,8 +43,7 @@ int ReadAPixel(int x, int y)
 * e.g. ProgramPalette(RED, 0x00FF0000) ;
 ************************************************************************************/
 
-void ProgramPalette(int PaletteNumber, int RGB)
-{
+void ProgramPalette(int PaletteNumber, int RGB) {
     WAIT_FOR_GRAPHICS;
 
     GraphicsColourReg = PaletteNumber;
@@ -69,8 +65,7 @@ void ClearScreen(int Colour) {
 * Will print an error and return without writing anything if the start/end points are off
 * of the screen or if length is negative
 ********************************************************************************************/
-void WriteHLine(int x1, int y1, int length, int Colour)
-{
+void WriteHLine(int x1, int y1, int length, int Colour) {
 	int x2 = x1 + length;
 
 	WAIT_FOR_GRAPHICS;
@@ -88,8 +83,7 @@ void WriteHLine(int x1, int y1, int length, int Colour)
 * Will print an error and return without writing anything if the start/end points are off
 * of the screen or if length is negative
 ********************************************************************************************/
-void WriteVLine(int x1, int y1, int length, int Colour)
-{
+void WriteVLine(int x1, int y1, int length, int Colour) {
 	int y2 = y1 + length;
 
 	WAIT_FOR_GRAPHICS;
@@ -106,9 +100,7 @@ void WriteVLine(int x1, int y1, int length, int Colour)
 * Will print an error and return without writing anything if the start/end points are off
 * of the screen
 ********************************************************************************************/
-void WriteLine(int x1, int y1, int x2, int y2, int Colour)
-{
-
+void WriteLine(int x1, int y1, int x2, int y2, int Colour) {
 	WAIT_FOR_GRAPHICS;
 
 	GraphicsX1Reg = x1;
@@ -125,35 +117,31 @@ void WriteLine(int x1, int y1, int x2, int y2, int Colour)
  * bottom-right point at (x2, y2).
  * Preconditions: x1 <= x2 and y1 <= y2
  */
-void Rectangle(int x1, int y1, int x2, int y2, int color)
-{
-
+void Rectangle(int x1, int y1, int x2, int y2, int color) {
 	WriteHLine(x1, y1, x2-x1, color);
 	WriteVLine(x1, y1, y2-y1, color);
-	// the plus one ensures the bottom-right corner is drawn
+	/* the plus one ensures the bottom-right corner is drawn */
 	WriteHLine(x1, y2, x2-x1+1, color);
 	WriteVLine(x2, y1, y2-y1, color);
 }
 
 /**
-* Write a filled rectangle (hardware-accelerated) to the screen
-* If x1 > x2 or y1 < y2 or if any corner does not fit on the screen, an error message
-* will be printed and the function will return without drawing anything
-*/
-void WriteFilledRectangle(int x1, int y1, int x2, int y2, int Colour)
-{
-
+ * Write a filled rectangle (hardware-accelerated) to the screen
+ * If x1 > x2 or y1 < y2 or if any corner does not fit on the screen, an error message
+ * will be printed and the function will return without drawing anything
+ */
+void WriteFilledRectangle(int x1, int y1, int x2, int y2, int Colour) {
 	int width = x2 - x1;
 	int height = x2 - x1;
 
 	WAIT_FOR_GRAPHICS;
 
-	// Draw some horizontal lines.
+	/* Draw some horizontal lines. */
 	while(y1 != y2) {
 		GraphicsX1Reg = x1;
 		GraphicsY1Reg = y1;
 		GraphicsX2Reg = x1 + width;
- 		// Y2 = Y1 -- horizontal.
+ 		/* Y2 = Y1 -- horizontal. */
 		GraphicsY2Reg = y1;
 		GraphicsColourReg = Colour;
 		GraphicsCommandReg = DrawHLine;
@@ -165,13 +153,14 @@ void WriteFilledRectangle(int x1, int y1, int x2, int y2, int Colour)
  * Draw a circle (hardware-accelerated)
  * Prints an error message and returns without drawing anything if any points would be off screen
  */
-void WriteCircle(int x0, int y0, int radius, int color)
-{
+void WriteCircle(int x0, int y0, int radius, int color) {
 	WAIT_FOR_GRAPHICS;
 
 	GraphicsX1Reg = x0;
 	GraphicsY1Reg = y0;
-	GraphicsX2Reg = radius; //pass in radius using X2 reg
+
+	/* pass in radius using X2 reg */
+	GraphicsX2Reg = radius;
 	GraphicsColourReg = color;
 	GraphicsCommandReg = DrawCircle;
 }
@@ -182,13 +171,12 @@ void WriteCircle(int x0, int y0, int radius, int color)
  * Note: Writing a space character with erase set to true will set all pixels
  * in the character to the background colour
  */
-void Text(int x, int y, int font_color, int background_color, char *text, int erase)
-{
+void Text(int x, int y, int font_color, int background_color, char *text, int erase) {
 	const int text_char_x_size = 12;
 	if (text != NULL) {
 		int i;
 		for (i = 0; text[i] != '\0'; i++) {
-			  OutGraphicsCharFont2a(x+(text_char_x_size * i), y, font_color, background_color, (int) text[i], erase);
+			OutGraphicsCharFont2a(x+(text_char_x_size * i), y, font_color, background_color, (int) text[i], erase);
 		}
 	}
 }
@@ -199,8 +187,7 @@ void Text(int x, int y, int font_color, int background_color, char *text, int er
  * the text dimensions.
  * Preconditions: x1 <= x2, y1 <= y2 and text != NULL
  */
-void Button(int x1, int y1, int x2, int y2, int outline_color, int font_color, int fill_color, char *text)
-{
+void Button(int x1, int y1, int x2, int y2, int outline_color, int font_color, int fill_color, char *text) {
 	const int text_padding_x = 6;
 	const int text_padding_y = 6;
 	WriteFilledRectangle(x1, y1, x2, y2, fill_color);
@@ -213,13 +200,12 @@ void Button(int x1, int y1, int x2, int y2, int outline_color, int font_color, i
  * Draw a circle (one pixel at a time)
  * Prints an error message and returns without drawing anything if any points would be off screen
  */
-void TestCircle(int x0, int y0, int radius, int color)
-{
-
-
+void TestCircle(int x0, int y0, int radius, int color) {
 	int x = radius;
 	int y = 0;
-	int decisionOver2 = 1 - x;   // Decision criterion divided by 2 evaluated at x=r, y=0
+
+	/* Decision criterion divided by 2 evaluated at x=r, y=0 */
+	int decisionOver2 = 1 - x;
 
 	while( y <= x ) {
 		WriteAPixel( x + x0,  y + y0, color); // Octant 1
@@ -233,11 +219,11 @@ void TestCircle(int x0, int y0, int radius, int color)
 
 		y++;
 		if (decisionOver2 <= 0) {
-		  decisionOver2 += 2 * y + 1;   // Change in decision criterion for y -> y+1
+			decisionOver2 += 2 * y + 1;   /* Change in decision criterion for y -> y+1 */
 		}
 		else {
-		  x--;
-		  decisionOver2 += 2 * (y - x) + 1;   // Change for y -> y+1, x -> x-1
+			x--;
+			decisionOver2 += 2 * (y - x) + 1;   /* Change for y -> y+1, x -> x-1 */
 		}
 	}
 }
@@ -248,17 +234,9 @@ void TestFilledCircle(int x0, int y0, int radius, int color)
 
 	int x = radius;
 	int y = 0;
-	int decisionOver2 = 1 - x;   // Decision criterion divided by 2 evaluated at x=r, y=0
+	int decisionOver2 = 1 - x;   /* Decision criterion divided by 2 evaluated at x=r, y=0 */
 
 	while( y <= x ) {
-		//WriteAPixel( x + x0,  y + y0, color); // Octant 1
-		//WriteAPixel( y + x0,  x + y0, color); // Octant 2
-		//WriteAPixel(-x + x0,  y + y0, color); // Octant 4
-		//WriteAPixel(-y + x0,  x + y0, color); // Octant 3
-		//WriteAPixel(-x + x0, -y + y0, color); // Octant 5
-		//WriteAPixel(-y + x0, -x + y0, color); // Octant 6
-		//WriteAPixel( x + x0, -y + y0, color); // Octant 7
-		//WriteAPixel( y + x0, -x + y0, color); // Octant 8
 		TestLine(x+x0, y+y0, -x+x0, y+y0,color);
 		TestLine(y+x0, x+y0, -y+x0, x+y0, color);
 		TestLine(-x+x0, -y+y0, x+x0, -y+y0, color);
@@ -266,11 +244,11 @@ void TestFilledCircle(int x0, int y0, int radius, int color)
 
 		y++;
 		if (decisionOver2 <= 0) {
-		  decisionOver2 += 2 * y + 1;   // Change in decision criterion for y -> y+1
+		  decisionOver2 += 2 * y + 1;   /* Change in decision criterion for y -> y+1 */
 		}
 		else {
 		  x--;
-		  decisionOver2 += 2 * (y - x) + 1;   // Change for y -> y+1, x -> x-1
+		  decisionOver2 += 2 * (y - x) + 1;   /* Change for y -> y+1, x -> x-1 */
 		}
 	}
 }
@@ -280,9 +258,7 @@ void TestFilledCircle(int x0, int y0, int radius, int color)
  * bottom-right point at (x2, y2).
  * Preconditions: x1 <= x2 and y1 <= y2
  */
-void TestFilledRectangle(int x1, int y1, int x2, int y2, int color)
-{
-
+void TestFilledRectangle(int x1, int y1, int x2, int y2, int color) {
 	int i;
 	for (i = y1; i <= y2; i++) {
 		WriteHLine(x1, i, x2-x1, color);
@@ -290,7 +266,6 @@ void TestFilledRectangle(int x1, int y1, int x2, int y2, int color)
 }
 
 void TestFilledRectangle2(int x1, int y1, int x2, int y2, int color){
-
 	int i;
 	int j;
 
@@ -306,25 +281,14 @@ void TestFilledRectangle2(int x1, int y1, int x2, int y2, int color){
 * Use for testing only
 *********************************************************************************************/
 
-void TestHLine(int x1, int y1, int length, int Colour)
-{
+void TestHLine(int x1, int y1, int length, int Colour) {
 	int i;
 	for(i = x1; i < x1+length; i++ )
 		WriteAPixel(i, y1, Colour);
 }
 
 void testClearScreen(int colour){
-
 	TestFilledRectangle(0, 0, 800, 480, colour);
-	//	int i;
-//	int j;
-//
-//	for (i = 0; i <= YRES; i++){
-//		for (j = 0; j <= XRES; j++){
-//			WriteAPixel(j, i, colour);
-//		}
-//	}
-
 }
 
 /*********************************************************************************************
@@ -373,16 +337,13 @@ void TestLine(int x1, int y1, int x2, int y2, int Colour)
     int s2 = sign(y2 - y1);
     int i, temp, interchange = 0, error ;
 
-// if x1=x2 and y1=y2 then it is a line of zero length
-
+	/* if x1=x2 and y1=y2 then it is a line of zero length */
     if(dx == 0 && dy == 0)
         return ;
 
- // must be a complex line so use bresenhams algorithm
+	/* must be a complex line so use bresenhams algorithm */
     else    {
-
-// swap delta x and delta y depending upon slop of line
-
+		/* swap delta x and delta y depending upon slop of line */
         if(dy > dx) {
             temp = dx ;
             dx = dy ;
@@ -390,11 +351,10 @@ void TestLine(int x1, int y1, int x2, int y2, int Colour)
             interchange = 1 ;
         }
 
-// initialise the error term to compensate for non-zero intercept
+		/* initialise the error term to compensate for non-zero intercept */
+        error = (dy << 1) - dx ;    /* (2 * dy) - dx */
 
-        error = (dy << 1) - dx ;    // (2 * dy) - dx
-
-// main loop
+		/* main loop */
         for(i = 1; i <= dx; i++)    {
             WriteAPixel(x, y, Colour);
 
@@ -404,7 +364,7 @@ void TestLine(int x1, int y1, int x2, int y2, int Colour)
                 else
                     y += s2 ;
 
-                error -= (dx << 1) ;    // times 2
+                error -= (dx << 1) ;    /* times 2 */
             }
 
             if(interchange == 1)
@@ -412,7 +372,7 @@ void TestLine(int x1, int y1, int x2, int y2, int Colour)
             else
                 x += s1 ;
 
-            error += (dy << 1) ;    // times 2
+            error += (dy << 1) ;    /* times 2 */
         }
     }
 }
@@ -450,19 +410,18 @@ void testRectangle (int x1, int y1, int x2, int y2, int colour) {
 * Use for testing only
 *******************************************************************************/
 void write_test_screen() {
-	// write RED lines (software) over the entire screen area
-	// if we do hardware-accelerated lines and they fail,
-	// the rest of the test will be harder to see
+	/*
+	 * write RED lines (software) over the entire screen area
+	 * if we do hardware-accelerated lines and they fail,
+	 * the rest of the test will be harder to see
+	 * each pair of lines (for horizontal/vertical) should have the same length
+	 * for horizontal lines,
+	 * test lines should start at both even and odd indexes
+	 * and have even and odd lengths
+	 * because they may be drawn incorrectly when drawing two pixels per cycle
+	 */
 
-
-	//each pair of lines (for horizontal/vertical) should have the same length
-
-	//for horizontal lines,
-	//test lines should start at both even and odd indexes
-	//and have even and odd lengths
-	//because they may be drawn incorrectly when drawing two pixels per cycle
-
-	// even start pixel, even length
+	/* even start pixel, even length */
 	TestHLine(100,100,100,LIME);
 	TestHLine(100,101,100,LIME);
 	TestHLine(100,102,100,LIME);
@@ -474,7 +433,7 @@ void write_test_screen() {
 	WriteHLine(100,108,100,BLUE);
 	WriteHLine(100,109,100,BLUE);
 
-	// odd start pixel, even length
+	/* odd start pixel, even length */
 	TestHLine(101,120,100,LIME);
 	TestHLine(101,121,100,LIME);
 	TestHLine(101,122,100,LIME);
@@ -486,7 +445,7 @@ void write_test_screen() {
 	WriteHLine(101,128,100,BLUE);
 	WriteHLine(101,129,100,BLUE);
 
-	// even start pixel, odd length
+	/* even start pixel, odd length */
 	TestHLine(100,140,101,LIME);
 	TestHLine(100,141,101,LIME);
 	TestHLine(100,142,101,LIME);
@@ -498,7 +457,7 @@ void write_test_screen() {
 	WriteHLine(100,148,101,BLUE);
 	WriteHLine(100,149,101,BLUE);
 
-	// odd start pixel, odd length
+	/* odd start pixel, odd length */
 	TestHLine(101,160,101,LIME);
 	TestHLine(101,161,101,LIME);
 	TestHLine(101,162,101,LIME);
@@ -510,7 +469,7 @@ void write_test_screen() {
 	WriteHLine(101,168,101,BLUE);
 	WriteHLine(101,169,101,BLUE);
 
-	// test vertical lines
+	/* test vertical lines */
 	TestVLine(200,200,100,LIME);
 	TestVLine(201,200,100,LIME);
 	TestVLine(202,200,100,LIME);
@@ -522,11 +481,12 @@ void write_test_screen() {
 	WriteVLine(208,200,100,BLUE);
 	WriteVLine(209,200,100,BLUE);
 
-	// compare bresenham lines
-	// should see a black line on top
-	// and a purple line a few pixels below it
-	// otherwise the hardware-accelerated line doesn't perfectly match
-
+	/*
+	 * compare bresenham lines
+	 * should see a black line on top
+	 * and a purple line a few pixels below it
+	 * otherwise the hardware-accelerated line doesn't perfectly match
+	 */
 	WriteLine(240,340,440,440,MAGENTA);
 	WriteLine(239,339,439,439,MAGENTA);
 	TestLine(240,340,440,440,BLACK);
@@ -537,23 +497,24 @@ void write_test_screen() {
 	WriteLine(250,350,450,450,MAGENTA);
 	WriteLine(249,349,449,449,MAGENTA);
 
-	// compare rectangles
-	// should see WHITE rectangles above
-	// and a LIME rectangles below
-
-	// even to even
+	/*
+	 * compare rectangles
+	 * should see WHITE rectangles above
+	 * and a LIME rectangles below
+	 * even to even
+	 */
 	TestFilledRectangle(400, 250, 500, 300, WHITE);
 
-	// even to odd
+	/* even to odd */
 	TestFilledRectangle(600, 250, 701, 300, WHITE);
 
-	// odd to even
+	/* odd to even */
 	TestFilledRectangle(401, 350, 500, 400, WHITE);
 
-	// odd to odd
+	/* odd to odd */
 	TestFilledRectangle(601, 350, 701, 400, WHITE);
 
-	// compare circles
+	/* compare circles */
 	TestCircle(500, 100, 50, WHITE);
 	TestCircle(700, 100, 50, WHITE);
 }

@@ -29,13 +29,13 @@ tmr.delay(1000000) -- wait 1,000,000 us = 1 second
 TWILIO_ACCOUNT_SID = "AC6ca841b2741c5f6380e08a3f6407534f"
 TWILIO_TOKEN =       "f87048377ab8f3507bcae3137f77da44"
 
--- Unfortunately, the Wi-FI dongle can only make unsecured HTTP requests, but Twilio requires 
+-- Unfortunately, the Wi-FI dongle can only make unsecured HTTP requests, but Twilio requires
 -- secured HTTPS requests, so we will use a relay website to convert HTTP requests into HTTPS requests
 -- visit http://iot-https-relay.appspot.com/ to learn more about this service
 -- Please be sure to understand the security issues of using this relay app and use at your own risk.
 
 -- this is the web address of the relay web site that our dongle sends the initial HTTP request to
-HOST = "iot-https-relay.appspot.com" 
+HOST = "iot-https-relay.appspot.com"
 HEROKU_HOST = "tranquil-shore-92989.herokuapp.com"
 
 -- The following variable defines the TWILIO web site that we will connect to
@@ -43,29 +43,28 @@ HEROKU_HOST = "tranquil-shore-92989.herokuapp.com"
 -- use the second (commented out) one if you want to make a call to a cell phone - that's the only change
 URI = "/twilio/Messages.json"
 HEROKU_URI = "/traffic/data"
---URI = "/twilio/Calls.json"
+
 
 function build_post_request(host, uri, data_table)
+    data = ""
 
-     data = ""
+    for param,value in pairs(data_table) do
+        data = data .. param.."="..value.."&"
+    end
 
-     for param,value in pairs(data_table) do
-          data = data .. param.."="..value.."&"
-     end
-
-     request = "POST "..uri.." HTTP/1.1\r\n"..
-     "Host: "..host.."\r\n"..
-     "Connection: close\r\n"..
-     "Content-Type: application/x-www-form-urlencoded\r\n"..
-     "Content-Length: "..string.len(data).."\r\n"..
-     "\r\n"..
-     data
-     print(request)
-     return request
+    request = "POST "..uri.." HTTP/1.1\r\n"..
+    "Host: "..host.."\r\n"..
+    "Connection: close\r\n"..
+    "Content-Type: application/x-www-form-urlencoded\r\n"..
+    "Content-Length: "..string.len(data).."\r\n"..
+    "\r\n"..
+    data
+    print(request)
+    return request
 end
 
 
--- This function registers a function to echo back any response from the server, to our DE1/NIOS system 
+-- This function registers a function to echo back any response from the server, to our DE1/NIOS system
 -- or hyper-terminal (depending on what the dongle is connected to)
 function display(sck,response)
      print(response) -- sorry bruno
@@ -113,6 +112,7 @@ function s(cars, lat, long, time)
      end)
 end
 
+
 function check_wifi(message)
   ip = wifi.sta.getip()
 
@@ -128,8 +128,8 @@ function check_wifi(message)
  end
 end
 
---gpio.mode(4, gpio.OUTPUT)
---gpio.write(4, gpio.HIGH)
+
+-- Toggle blue light
 lighton=0
 pin=4
 gpio.mode(pin,gpio.OUTPUT)
