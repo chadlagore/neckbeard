@@ -22,13 +22,8 @@
 
 
 int main() {
-	/* Run tests */
-	// test_wifi();
-	// test_gps();
-	// test_send_data_package();
-
 	int car_count, x, y;
-	float base_dist = HEX0 + HEX1*10 + HEX2*100;//read_dist();
+	float base_dist = HEX0 + HEX1*10 + HEX2*100;
 	Point point_touched;
 
 	printf("Initializing...\n");

@@ -90,16 +90,40 @@ void Button(int x1, int y1, int x2, int y2, int outline_color, int font_color,
 // Clears the screen using hardware.
 void ClearScreen(int Colour);
 
+//software accelerated horizontal line unit test
 void TestHLine(int x1, int y1, int length, int Colour);
+
+//software accelerated vertical line unit test
 void TestVLine(int x1, int y1, int length, int Colour);
+
+//software accelerated bresenham line unit test
 void TestLine(int x1, int y1, int x2, int y2, int Colour);
+
+//software accelerated filled rectangle unit test
 void TestFilledRectangle(int x1, int y1, int x2, int y2, int color);
+
+//software accelerated circle unit test
 void TestCircle(int x0, int y0, int radius, int color);
-void line_test_screen();
-void testClearScreen(int colour);
-void TestFilledRectangle2(int x1, int y1, int x2, int y2, int color);
-void testRectangle (int x1, int y1, int x2, int y2, int colour);
-void testButton(int x1, int y1, int x2, int y2, int outline_color, int font_color, int fill_color, char *text);
+
+//software acclerated filled circle unit test
 void TestFilledCircle(int x0, int y0, int radius, int color);
+
+//clears the screen to a certain colour
+void testClearScreen(int colour);
+
+//software acclerated rectangle (another method) unit test
+void TestFilledRectangle2(int x1, int y1, int x2, int y2, int color);
+
+//unfilled rectangle unit test
+void testRectangle (int x1, int y1, int x2, int y2, int colour);
+
+//generates a button, which is a filled rectangle with
+//an outline and has text inside.
+void testButton(int x1, int y1, int x2, int y2, int outline_color, int font_color, int fill_color, char *text);
+
+//tests a variety of shapes and compares the software and hardware
+//versions in order to ensure they're accurate
+void line_test_screen();
+
 
 #endif /* _GRAPHICS_H */

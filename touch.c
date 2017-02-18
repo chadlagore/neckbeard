@@ -14,7 +14,7 @@ void init_touch(void) {
 
 	usleep(5000);
 
-	//touch_enable sequence
+	/* touch_enable sequence */
 	sendchar_touch(0x55);
 	sendchar_touch(0x01);
 	sendchar_touch(0x12);
@@ -57,7 +57,6 @@ int screen_release(void){
 
 
 void wait_for_touch(){
-	//printf("Waiting for screen to be untouched\n");
 	while(!screen_touched());
 }
 
@@ -71,9 +70,9 @@ Point get_press(void) {
 	Point p1;
 
 	wait_for_touch();
-	//printf("waited for touch\n");
+
 	WAIT_FOR_TOUCH
-	//printf("status enabled code to continue\n");
+
 	p1.x = AR1100_RX;
 
 	WAIT_FOR_TOUCH

@@ -99,8 +99,8 @@ void parse_packet(struct gps_packet *pkt) {
 		token = strtok (NULL, ",");
 	}
 
-	/* get tokens */
-	pkt->utc_time = tokens[1]; //starts at 1 because 0 will be $GPGGA
+	/* Get tokens (starts at 1 because 0 will be $GPGGA) */
+	pkt->utc_time = tokens[1];
 	pkt->latitude = tokens[2];
 	pkt->NS_indicator = tokens[3];
 	pkt->longitude = tokens[4];
@@ -125,7 +125,7 @@ void parse_packet(struct gps_packet *pkt) {
 
 /*
  * Covert UTC timestamp to local time and return it
- * in string format
+ * in string format.
  */
 char *utc_to_local(struct gps_packet *pkt) {
 	int hours_h = ((char) pkt->utc_time[0] - '0');
@@ -139,11 +139,6 @@ char *utc_to_local(struct gps_packet *pkt) {
 	int hours = (hours_h*10 + hours_l + 16) % 24;
 	hours_h = hours / 10;
 	hours_l = hours % 10;
-
-	/* Write the values to the hex displays */
-	// *HEX4_5 = (hours_h << 4) | hours_l;
-	// *HEX2_3 = (minutes_h << 4) | minutes_l;
-	// *HEX0_1 = (seconds_h << 4) | seconds_l;
 
 	sprintf(pkt->local_time, "%d%d:%d%d:%d%d\0", hours_h, hours_l, minutes_h, minutes_l, seconds_h, seconds_l);
 	return pkt->local_time;

@@ -6,7 +6,10 @@
 #include <unistd.h>
 #include <time.h>
 
-
+/**
+ * This displays a crosswalk and introduces the app, fake
+ * copyright info and stuff.
+ */
 void startup_screen() {
 
     int i;
@@ -52,7 +55,9 @@ void startup_screen() {
     }
 }
 
-
+/**
+ * This function draws the main menu and the buttons
+ */
 void main_menu() {
     testClearScreen(BLUE);
 
@@ -97,7 +102,11 @@ void main_menu() {
 }
 
 
-void calibrate(float *base_dist){
+/**
+ * This calls the calibrate function, then performs a graphical
+ * flourish of sorts showing progress.
+ */
+void calibrate(float *base_dist) {
     TestFilledRectangle(220, 115, 570, 365, BLACK);
     TestFilledRectangle(225, 120, 565, 360, YELLOW);
     Text(320, 170, BLACK, YELLOW, "calibrating", 0);
@@ -109,7 +118,7 @@ void calibrate(float *base_dist){
     for (i = 0; i <= 10; i++){
         TestFilledRectangle(250, 315, 250 + 29*i , 335, BLUE );
         if (i == 5){
-            *base_dist = HEX0 + HEX1*10 + HEX2*100;//read_dist(); TODO uncomment when sensor ready
+            *base_dist = HEX0 + HEX1*10 + HEX2*100;
         }
         usleep(100000);
     }
@@ -118,7 +127,12 @@ void calibrate(float *base_dist){
     main_menu();
 }
 
-
+/**
+ * This displays a pop-up window that has the live gps, time and
+ * car counting data. this is an event loop that is constantly
+ * updating the graphics with the information. this will include an exit
+ * button to leave the function.
+ */
 void display_gps() {
     TestFilledRectangle(220, 115, 570, 365, BLACK);
     TestFilledRectangle(225, 120, 565, 360, YELLOW);
@@ -175,7 +189,12 @@ void display_gps() {
 
 }
 
+/**
+ * opens a pop-up window that displays the amount of cars
+ * that have driven past in real time.
+ */
 void display_cars(){
+
     TestFilledRectangle(220, 115, 570, 365, BLACK);
     TestFilledRectangle(225, 120, 565, 360, YELLOW);
     TestFilledRectangle(570, 55, 670, 155, BLACK);
@@ -194,6 +213,11 @@ void display_cars(){
 }
 
 
+/**
+ * Creates a bar graph which represents the amount of
+ * cars that passed by over the course of a 10-second
+ * interval
+ */
 void plot_data(float base_dist) {
     Point touch_point;
     int x, y;
@@ -216,14 +240,10 @@ void plot_data(float base_dist) {
 
         TestFilledRectangle(180, 99, 220, 105, WHITE);
 
-        /* Draw exit button */
-        // TestFilledRectangle(635, 390, 800, 470, BLACK);
-        // TestFilledRectangle(640, 395, 795, 475, MAGENTA );
-        // Text(690, 425, BLACK, MAGENTA, "EXIT", 0);
-
         /* Plot data */
         int j, delta, num_cars;
         clock_t start;
+
         for(j = 0; j < 11; j++){
             start = clock();
             delta = 0;
@@ -234,7 +254,7 @@ void plot_data(float base_dist) {
             /* Wait for 1 second (but remain responsive) */
             while (delta < 10) {
                 /* Get distance from sensor */
-    			dist_read = HEX0 + HEX1*10 + HEX2*100;//read_dist();
+    			dist_read = HEX0 + HEX1*10 + HEX2*100;
 
     			/*
     			 * Check if the distance we're reading got shorter
@@ -242,7 +262,6 @@ void plot_data(float base_dist) {
     			 */
     			if (base_dist - dist_read >= CAR_DETECTION_THRESHOLD) {
     				shorter_dist = 1;
-    				// printf("Dist read: %f\t Base dist: %f\n", dist_read, base_dist);
     			}
 
     			/*
