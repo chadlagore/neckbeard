@@ -13,6 +13,9 @@
 
 void init_bluetooth(void);
 void sendchar_bluetooth(char c);
+char get_char(void);
+char polling_char(void);
+void receive(char incoming[]);
 void sendstring_bluetooth(char str[]);
 void command_mode(void);
 void data_mode(void);
