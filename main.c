@@ -22,12 +22,8 @@
 
 
 int main() {
-	/* Run tests */
-	// test_wifi();
-	// test_gps();
-	// test_send_data_package();
-
 	int car_count, x, y;
+	char char_received, bluetooth_msg[50];
 	float base_dist = HEX0 + HEX1*10 + HEX2*100;//read_dist();
 	Point point_touched;
 
@@ -35,6 +31,7 @@ int main() {
 	init_gps();
 	init_wifi();
 	init_touch();
+	init_bluetooth();
 	startup_screen();
 	main_menu();
 	srand(time(NULL));
@@ -64,9 +61,17 @@ int main() {
 			get_release();
 			plot_data(base_dist);
 		}
+
+		char_received = get_char();
+
+		if (char_received == 'C') {
+			calibrate(&base_dist);
+			printf("Received command: %c\n", char_received);
+			sprintf(bluetooth_msg, "$C%f\n\0", base_dist);
+			printf("Sending reply: %s\n", bluetooth_msg);
+			sendstring_bluetooth(bluetooth_msg);
+		}
 	}
 
-	printf("\nDONE\n");
-	while (1) {};
 	return 0;
 }
