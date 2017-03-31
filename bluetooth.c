@@ -2,11 +2,13 @@
 #include <string.h>
 #include <unistd.h>
 #include "bluetooth.h"
+#include "distance.h"
 
 
 void init_bluetooth(void){
 	BLUETOOTH_CONTROL = 0x15;
 	BLUETOOTH_BAUD = 0x01; //datasheet recommends 115k baud rate
+
 }
 
 void sendchar_bluetooth(char c){
@@ -109,6 +111,38 @@ void set_pw(char pw[]) {
 	sendstring_bluetooth("\r\n");
 	data_mode();
 }
+
+void command_set(){
+	char rec_char = get_char();
+	float base_dist = HEX0 + HEX1*10 + HEX2*100;
+	char string[10];
+
+	if (get_char == 'C') {
+		printf("received character: %c", rec_char);
+		calibrate();
+		base_dist = HEX0 + HEX1*10 + HEX2* 100;
+		sprintf(string, "$C%.f\n", base_dist);
+		sendstring_bluetooth(string);
+		main_menu();
+	}
+
+	if (get_char == 'D') {
+		while(get_char != 'X'){
+			printf("received character: %c", rec_char);
+			base_dist = HEX0 + HEX1*10 + HEX2* 100;
+			sprintf(string, "$%.2f\n", base_dist);
+			printf(string);
+			sendstring_bluetooth(string);
+			usleep(1000000);
+		}
+
+	}
+
+	if (get_char == 'S') {
+		printf("received character: %c", rec_char);
+	}
+}
+
 
 void test_bluetooth(void) {
     printf("Testing Bluetooth...\n");

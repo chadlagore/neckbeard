@@ -16,7 +16,7 @@
 #define GPS_BUTTON          (x >= 140 && x <= 350 && y >= 310 && y <= 410)
 #define CAR_BUTTON          (x >= 450 && x <= 670 && y >= 160 && y <= 260)
 #define EXIT_BUTTON         (x >= 570 && x <= 670 && y >= 60  && y <= 150)
-#define EXIT2_BUTTON 		(x >= 635 && x <= 800 && y >= 390 && y <= 470)
+#define EXIT2_BUTTON 		(x >= 550 && x <= 750 && y >= 375 && y <= 475)
 #define PLOT_BUTTON         (x >= 450 && x <= 665 && y >= 310 && y <= 410)
 /**
  * this displays a crosswalk and introduces the app, fake
@@ -33,7 +33,7 @@ void main_menu();
  * this calls the calibrate function, then performs a graphical
  * flourish of sorts showing progress or something.
  */
-void calibrate(float *base_dist);
+void calibrate();
 
 /**
  * this displays a pop-up window that has the live gps, time and
