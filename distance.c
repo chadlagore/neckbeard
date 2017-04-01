@@ -49,14 +49,7 @@ static void itoa(int n, char s[]) {
 
 
 float read_dist() {
-    // long actual_cycles = BIT_FACTOR * CYCLES;
-    // float microseconds = actual_cycles / CLOCK_SPEED_MHZ;
-
-    // To save bits, we divide the cycle count and
-    // lose resolution. Multiply back up by `BitFactor'.
-    // From manual:
-    //             Distance(us) in cm = us / 58;
-    return 0;//microseconds / 58;
+    return HEX0 + HEX1*10 + HEX2*100;
 }
 
 
