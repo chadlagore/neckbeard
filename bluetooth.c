@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include "bluetooth.h"
 #include "distance.h"
+#include "gps.h"
 
 
 void init_bluetooth(void){
@@ -130,7 +131,7 @@ void command_set(){
 		while(get_char != 'X'){
 			printf("received character: %c", rec_char);
 			base_dist = HEX0 + HEX1*10 + HEX2* 100;
-			sprintf(string, "$%.2f\n", base_dist);
+			sprintf(string, "$D%.2f\n", base_dist);
 			printf(string);
 			sendstring_bluetooth(string);
 			usleep(1000000);
@@ -139,7 +140,17 @@ void command_set(){
 	}
 
 	if (get_char == 'S') {
+		struct gps_packet *gps_pkt = gps_packet_create();
+		update_gps_data(gps_pkt);
+
 		printf("received character: %c", rec_char);
+		base_dist = HEX0 + HEX1*10 + HEX2* 100;
+		sprintf(string, "$S%.2f,", base_dist);
+		strcat(string, gps_pkt->latitude);
+		strcat(string, ",");
+		strcat(string, gps_pkt->longitude);
+		strcat(string, "\n");
+		sendstring_bluetooth(string);
 	}
 }
 
