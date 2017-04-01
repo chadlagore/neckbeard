@@ -74,7 +74,7 @@ static void do_bluetooth(float *base_dist, struct gps_packet *gps_pkt) {
 
 int main() {
 	int car_count, x, y, err;
-	float base_dist = HEX0 + HEX1*10 + HEX2*100;
+	float base_dist = read_dist();
 	Point point_touched;
 	struct gps_packet *gps_pkt;
 

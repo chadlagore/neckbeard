@@ -109,12 +109,12 @@ void calibrate(float *base_dist){
     for (i = 0; i <= 10; i++){
         TestFilledRectangle(250, 315, 250 + 29*i , 335, BLUE );
         if (i == 5){
-            *base_dist = HEX0 + HEX1*10 + HEX2*100;//read_dist(); TODO uncomment when sensor ready
+            *base_dist = read_dist(); TODO uncomment when sensor ready
         }
         usleep(100000);
     }
 
-    *base_dist = HEX0 + HEX1*10 + HEX2*100;
+    *base_dist = read_dist();
     main_menu();
 }
 
@@ -216,11 +216,6 @@ void plot_data(float base_dist) {
 
         TestFilledRectangle(180, 99, 220, 105, WHITE);
 
-        /* Draw exit button */
-        // TestFilledRectangle(635, 390, 800, 470, BLACK);
-        // TestFilledRectangle(640, 395, 795, 475, MAGENTA );
-        // Text(690, 425, BLACK, MAGENTA, "EXIT", 0);
-
         /* Plot data */
         int j, delta, num_cars;
         clock_t start;
@@ -234,7 +229,7 @@ void plot_data(float base_dist) {
             /* Wait for 1 second (but remain responsive) */
             while (delta < 10) {
                 /* Get distance from sensor */
-    			dist_read = HEX0 + HEX1*10 + HEX2*100;//read_dist();
+    			dist_read = read_dist();
 
     			/*
     			 * Check if the distance we're reading got shorter

@@ -10,12 +10,12 @@ void init_bluetooth(void){
 }
 
 void sendchar_bluetooth(char c){
-    while(1) {
-			if (BLUETOOTH_STATUS & BLUETOOTH_TX_MASK) {
-				BLUETOOTH_TXDATA = c;
-				break;
-			}
+	while(1) {
+		if (BLUETOOTH_STATUS & BLUETOOTH_TX_MASK) {
+			BLUETOOTH_TXDATA = c;
+			break;
 		}
+	}
 }
 
 char get_char(void){
@@ -51,37 +51,28 @@ void receive(char incoming[]) {
 			i++;
 		}
 	}
-	//debug print
 	incoming[i] = '\0';
 }
 
 void sendstring_bluetooth(char str[]){
-
-  int i;
+	int i;
 	int length = strlen(str);
 
-    for (i = 0; i < length && str[i] != '\0'; i++) {
-    	usleep(100000); //100ms wait
-			sendchar_bluetooth(str[i]);
+	for (i = 0; i < length && str[i] != '\0'; i++) {
+		usleep(100000); //100ms wait
+		sendchar_bluetooth(str[i]);
 	}
 }
 
 void command_mode(void){
-  printf("Entering Command Mode...\n");
+	printf("Entering Command Mode...\n");
 	usleep(100000); // 1s wait
 	sendstring_bluetooth("$$$");
 	usleep(100000);
-
-//	wait_for_read();
-//	char O = get_char();
-//	printf("%c", O);
-//	wait_for_read();
-//	char K = get_char();
-//	printf("%c\n", K);
 }
 
 void data_mode(void) {
-  printf("Entering Data Mode...\n");
+	printf("Entering Data Mode...\n");
 	usleep(100000); // 1s wait
 	sendstring_bluetooth("---\r\n");
 	usleep(100000);
@@ -111,14 +102,14 @@ void set_pw(char pw[]) {
 }
 
 void test_bluetooth(void) {
-    printf("Testing Bluetooth...\n");
-    printf("Connection established...\n");
+	printf("Testing Bluetooth...\n");
+	printf("Connection established...\n");
 
-    const char btname[] = "bluetooth_is_suffering";
-    const char password[] = "morning";
+	const char btname[] = "bluetooth_is_suffering";
+	const char password[] = "morning";
 
-    set_name(btname);
-    set_pw(password);
+	set_name(btname);
+	set_pw(password);
 
-    printf("Bluetooth successfully updated!\n");
+	printf("Bluetooth successfully updated!\n");
 }

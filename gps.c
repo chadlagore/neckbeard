@@ -140,11 +140,6 @@ char *utc_to_local(struct gps_packet *pkt) {
 	hours_h = hours / 10;
 	hours_l = hours % 10;
 
-	/* Write the values to the hex displays */
-	// *HEX4_5 = (hours_h << 4) | hours_l;
-	// *HEX2_3 = (minutes_h << 4) | minutes_l;
-	// *HEX0_1 = (seconds_h << 4) | seconds_l;
-
 	sprintf(pkt->local_time, "%d%d:%d%d:%d%d\0", hours_h, hours_l, minutes_h, minutes_l, seconds_h, seconds_l);
 	return pkt->local_time;
 }

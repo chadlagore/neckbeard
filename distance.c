@@ -11,9 +11,9 @@
 /* UTILITY FUNCTIONS */
 
 /*
- * reverse:  reverse string s in place
- * copied from cstdlib because not supplied by eclipse
- */
+* reverse:  reverse string s in place
+* copied from cstdlib because not supplied by eclipse
+*/
 static void reverse(char s[]) {
 	int i, j;
 	char c;
@@ -26,9 +26,9 @@ static void reverse(char s[]) {
 }
 
 /*
- * itoa:  convert n to characters in s
- * copied from cstdlib because not supplied by eclipse
- */
+* itoa:  convert n to characters in s
+* copied from cstdlib because not supplied by eclipse
+*/
 static void itoa(int n, char s[]) {
 	int i, sign;
 
@@ -49,19 +49,19 @@ static void itoa(int n, char s[]) {
 
 
 float read_dist() {
-    return HEX0 + HEX1*10 + HEX2*100;
+	return read_dist();
 }
 
 
 /*
- * Count the number of cars that pass
- * Every "seconds" number of seconds send data to server
- * It needs to be passed the base_dist, which is the
- * distance from the sensor to the ground when there is
- * no car passing.
- * mode must be either HARDWARE_COUNTER or SOFTWARE_COUNTER
- * THIS FUNCTION WILL BLOCK UNTIL THE USER CLICKS EXIT
- */
+* Count the number of cars that pass
+* Every "seconds" number of seconds send data to server
+* It needs to be passed the base_dist, which is the
+* distance from the sensor to the ground when there is
+* no car passing.
+* mode must be either HARDWARE_COUNTER or SOFTWARE_COUNTER
+* THIS FUNCTION WILL BLOCK UNTIL THE USER CLICKS EXIT
+*/
 void count_cars(int seconds, float base_dist, int mode) {
 	struct gps_packet *gps_pkt = gps_packet_create();
 	clock_t start = clock();
@@ -76,22 +76,21 @@ void count_cars(int seconds, float base_dist, int mode) {
 	while (1) {
 		if (mode == SOFTWARE_COUNTER) {
 			/* Get distance from sensor */
-			dist_read = HEX0 + HEX1*10 + HEX2*100;//read_dist();
+			dist_read = read_dist();
 
 			/*
-			 * Check if the distance we're reading got shorter
-			 * i.e. a car is passing
-			 */
+			* Check if the distance we're reading got shorter
+			* i.e. a car is passing
+			*/
 			if (base_dist - dist_read >= CAR_DETECTION_THRESHOLD) {
 				shorter_dist = 1;
-				// printf("Dist read: %f\t Base dist: %f\n", dist_read, base_dist);
 			}
 
 			/*
-			 * Otherwise check if a car was passing and is done
-			 * passing
-			 * i.e. distance returned to base_dist
-			 */
+			* Otherwise check if a car was passing and is done
+			* passing
+			* i.e. distance returned to base_dist
+			*/
 			else if (abs(base_dist - dist_read) <= 10 && shorter_dist == 1) {
 				shorter_dist = 0;
 				car_count++;
@@ -107,12 +106,11 @@ void count_cars(int seconds, float base_dist, int mode) {
 		/* Is it time to send data yet? */
 		if (delta >= seconds) {
 			/* Convert car count to string */
-			// car_count = rand() % 20;
 			itoa(car_count, car_count_str);
 
 			update_gps_data(gps_pkt);
 			sprintf(command, "s('%s','%s','%s','%s')\0",
-				car_count_str, gps_pkt->latitude, gps_pkt->longitude, gps_pkt->utc_time);
+			car_count_str, gps_pkt->latitude, gps_pkt->longitude, gps_pkt->utc_time);
 
 			printf("Sending command: %s\n", command);
 			TestFilledCircle(300, 300, 20, 12);
@@ -140,34 +138,14 @@ void count_cars(int seconds, float base_dist, int mode) {
 		/* Check for user action */
 		if (screen_touched()) {
 			touch_piont = get_release();
-            x = touch_piont.x;
-            y = touch_piont.y;
+			x = touch_piont.x;
+			y = touch_piont.y;
 
-            if (EXIT_BUTTON) {
+			if (EXIT_BUTTON) {
 				gps_packet_destroy(gps_pkt);
-                main_menu();
-                return;
-            }
-        }
+				main_menu();
+				return;
+			}
+		}
 	}
-}
-
-
-// initialize
-void init_distance(void) {
-	DISTANCE_BAUD = 0x1F;
-}
-
-int get_distance(void)
-{
-	//while ((DISTANCE_STATUS & 0x2) != 0x2);
-	return DISTANCE_RXDATA;
-}
-
-int test_for_distance_data(void) {
-	 // Test Rx bit in 6850 serial comms chip status register
-	 // if RX bit is set return TRUE, otherwise return FALSE
-	volatile unsigned short int status = (volatile unsigned short int) DISTANCE_STATUS;
-	return status & 0x1;
-
 }
