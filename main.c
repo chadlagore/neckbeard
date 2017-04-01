@@ -31,16 +31,21 @@ static void do_bluetooth(float *base_dist, struct gps_packet *gps_pkt) {
 	char char_received = get_char();
 	float dist;
 
+	printf("%c\n", char_received);
+
 	switch (char_received) {
 		case 'D':
 			streaming = TRUE;
 			stream_start = clock();
+			dist = HEX0 + HEX1*10 + HEX2*100;
+			sprintf(bluetooth_msg, "$D%f\n", dist);
+			sendstring_bluetooth(bluetooth_msg);
 			break;
 
 		case 'C':
 			streaming = FALSE;
-			base_dist = HEX0 + HEX1*10 + HEX2*100;
-			sprintf(bluetooth_msg, "$C%f\n", base_dist);
+			*base_dist = HEX0 + HEX1*10 + HEX2*100;
+			sprintf(bluetooth_msg, "$C%f\n", *base_dist);
 			sendstring_bluetooth(bluetooth_msg);
 			break;
 
@@ -49,7 +54,7 @@ static void do_bluetooth(float *base_dist, struct gps_packet *gps_pkt) {
 			dist = HEX0 + HEX1*10 + HEX2*100;
 			update_gps_data(gps_pkt);
 			sprintf(bluetooth_msg, "$S%f,Connected,%f,%s,%s\n",
-				dist, base_dist, gps_pkt->latitude, gps_pkt->longitude);
+				dist, *base_dist, gps_pkt->latitude, gps_pkt->longitude);
 			sendstring_bluetooth(bluetooth_msg);
 			break;
 
@@ -57,14 +62,14 @@ static void do_bluetooth(float *base_dist, struct gps_packet *gps_pkt) {
 			streaming = FALSE;
 			break;
 
-		default: return;
-	}
-
-	if (streaming && (clock() - stream_start)/CLOCKS_PER_SEC > 1) {
-		stream_start = clock();
-		dist = HEX0 + HEX1*10 + HEX2*100;
-		sprintf(bluetooth_msg, "$D%f\n", dist);
-		sendstring_bluetooth(bluetooth_msg);
+		default:
+			if (streaming &&
+				((float)(clock() - stream_start)/CLOCKS_PER_SEC) > 1.0) {
+				stream_start = clock();
+				dist = HEX0 + HEX1*10 + HEX2*100;
+				sprintf(bluetooth_msg, "$D%f\n", dist);
+				sendstring_bluetooth(bluetooth_msg);
+			}
 	}
 
 	printf("Received command: %c\n", char_received);
