@@ -49,7 +49,7 @@ static void itoa(int n, char s[]) {
 
 
 float read_dist() {
-	return read_dist();
+	return HEX0 + HEX1*10 + HEX2*100;
 }
 
 

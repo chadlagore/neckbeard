@@ -109,7 +109,7 @@ void calibrate(float *base_dist){
     for (i = 0; i <= 10; i++){
         TestFilledRectangle(250, 315, 250 + 29*i , 335, BLUE );
         if (i == 5){
-            *base_dist = read_dist(); TODO uncomment when sensor ready
+            *base_dist = read_dist();
         }
         usleep(100000);
     }
@@ -237,7 +237,6 @@ void plot_data(float base_dist) {
     			 */
     			if (base_dist - dist_read >= CAR_DETECTION_THRESHOLD) {
     				shorter_dist = 1;
-    				// printf("Dist read: %f\t Base dist: %f\n", dist_read, base_dist);
     			}
 
     			/*

@@ -30,6 +30,7 @@ static void do_bluetooth(float *base_dist, struct gps_packet *gps_pkt) {
 	char bluetooth_msg[50];
 	char char_received = get_char();
 	float dist = read_dist();
+	int received_command = TRUE;
 
 	switch (char_received) {
 		case 'D':
@@ -59,16 +60,21 @@ static void do_bluetooth(float *base_dist, struct gps_packet *gps_pkt) {
 			break;
 
 		default:
+			received_command = FALSE;
+
 			if (streaming &&
 				((float)(clock() - stream_start)/CLOCKS_PER_SEC) > 1.0) {
 				stream_start = clock();
 				sprintf(bluetooth_msg, "$D%f\n", dist);
+				printf("Streaming data: %s", bluetooth_msg);
 				sendstring_bluetooth(bluetooth_msg);
 			}
 	}
 
-	printf("Received command: %c\n", char_received);
-	printf("Sent reply: %s\n", bluetooth_msg);
+	if (received_command) {
+		printf("Received command: %c\n", char_received);
+		printf("Sent reply: %s\n", bluetooth_msg);
+	}
 }
 
 
