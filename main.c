@@ -29,29 +29,29 @@ clock_t stream_start;
 static void do_bluetooth(float *base_dist, struct gps_packet *gps_pkt) {
 	char bluetooth_msg[50];
 	char char_received = get_char();
-	float dist = read_dist();
+	int dist = (int) read_dist();
 	int received_command = TRUE;
 
 	switch (char_received) {
 		case 'D':
 			streaming = TRUE;
 			stream_start = clock();
-			sprintf(bluetooth_msg, "$D%f\n", dist);
+			sprintf(bluetooth_msg, "$D%d\n", dist);
 			sendstring_bluetooth(bluetooth_msg);
 			break;
 
 		case 'C':
 			streaming = FALSE;
 			*base_dist = read_dist();
-			sprintf(bluetooth_msg, "$C%f\n", *base_dist);
+			sprintf(bluetooth_msg, "$C%d\n", (int)*base_dist);
 			sendstring_bluetooth(bluetooth_msg);
 			break;
 
 		case 'S':
 			streaming = FALSE;
 			update_gps_data(gps_pkt);
-			sprintf(bluetooth_msg, "$S%f,Connected,%f,%s,%s\n",
-				dist, *base_dist, gps_pkt->latitude, gps_pkt->longitude);
+			sprintf(bluetooth_msg, "$S%d,Connected,%d,%s,%s\n",
+				dist, (int)*base_dist, gps_pkt->latitude, gps_pkt->longitude);
 			sendstring_bluetooth(bluetooth_msg);
 			break;
 
@@ -65,7 +65,7 @@ static void do_bluetooth(float *base_dist, struct gps_packet *gps_pkt) {
 			if (streaming &&
 				((float)(clock() - stream_start)/CLOCKS_PER_SEC) > 1.0) {
 				stream_start = clock();
-				sprintf(bluetooth_msg, "$D%f\n", dist);
+				sprintf(bluetooth_msg, "$D%d\n", dist);
 				printf("Streaming data: %s", bluetooth_msg);
 				sendstring_bluetooth(bluetooth_msg);
 			}
