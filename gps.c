@@ -30,9 +30,19 @@ struct gps_packet *gps_packet_create() {
 	struct gps_packet *packet = malloc(sizeof(struct gps_packet));
 	packet->packetStr = malloc(sizeof(char)*MAX_PACKET_LENGTH);
 	packet->packetStr_copy = malloc(sizeof(char)*MAX_PACKET_LENGTH);
+	packet->local_time = malloc(sizeof(char)*9);
 
 	return packet;
 }
+
+
+void gps_packet_destroy(struct gps_packet *pkt) {
+	free(pkt->packetStr);
+	free(pkt->packetStr_copy);
+	free(pkt->local_time);
+	free(pkt);
+}
+
 
 /*
  * Store the packet recieved in pack->packetStr
@@ -60,6 +70,7 @@ void receive_packet(struct gps_packet *pkt) {
 	}
 }
 
+
 /*
  * Verify that the packet is of type GPGGA
  */
@@ -69,6 +80,7 @@ int is_GGA(struct gps_packet *pkt) {
 		&& pkt->packetStr[4] == 'G'
 		&& pkt->packetStr[5] == 'A');
 }
+
 
 /*
  * Stores each element of GPS data in an array (Problem: sometimes no data for
@@ -110,6 +122,7 @@ void parse_packet(struct gps_packet *pkt) {
     pkt->longitude[5] = lower;
 }
 
+
 /*
  * Covert UTC timestamp to local time and return it
  * in string format
@@ -123,16 +136,11 @@ char *utc_to_local(struct gps_packet *pkt) {
 	int seconds_l = ((char) pkt->utc_time[5] - '0');
 
 	/* Add 8 hours to UTC time for Vancouver time */
-	int hours = (hours_h*10 + hours_l + 8) % 24;
+	int hours = (hours_h*10 + hours_l + 16) % 24;
 	hours_h = hours / 10;
 	hours_l = hours % 10;
 
-	/* Write the values to the hex displays */
-	*HEX4_5 = (hours_h << 4) | hours_l;
-	*HEX2_3 = (minutes_h << 4) | minutes_l;
-	*HEX0_1 = (seconds_h << 4) | seconds_l;
-
-	sprintf(pkt->local_time, "%d%d:%d%d:%d%d", hours_h, hours_l, minutes_h, minutes_l, seconds_h, seconds_l);
+	sprintf(pkt->local_time, "%d%d:%d%d:%d%d\0", hours_h, hours_l, minutes_h, minutes_l, seconds_h, seconds_l);
 	return pkt->local_time;
 }
 
