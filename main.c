@@ -3,8 +3,6 @@
 #include <math.h>
 #include <time.h>
 #include <unistd.h>
-#include <pthread.h>
-#include "nios_system.h"
 #include "touch.h"
 #include "bluetooth.h"
 #include "graphics.h"
@@ -29,14 +27,14 @@ clock_t stream_start;
 static void do_bluetooth(float *base_dist, struct gps_packet *gps_pkt) {
 	char bluetooth_msg[50];
 	char char_received = get_char();
-	int dist = (int) read_dist();
+	float dist = read_dist();
 	int received_command = TRUE;
 
 	switch (char_received) {
 		case 'D':
 			streaming = TRUE;
 			stream_start = clock();
-			sprintf(bluetooth_msg, "$D%d\n", dist);
+			sprintf(bluetooth_msg, "$D%0.0f\n", dist);
 			sendstring_bluetooth(bluetooth_msg);
 			break;
 
@@ -50,7 +48,7 @@ static void do_bluetooth(float *base_dist, struct gps_packet *gps_pkt) {
 		case 'S':
 			streaming = FALSE;
 			update_gps_data(gps_pkt);
-			sprintf(bluetooth_msg, "$S%d,Connected,%d,%s,%s\n",
+			sprintf(bluetooth_msg, "$S%0.0f,Connected,%d,%s,%s\n",
 				dist, (int)*base_dist, gps_pkt->latitude, gps_pkt->longitude);
 			sendstring_bluetooth(bluetooth_msg);
 			break;
@@ -65,7 +63,7 @@ static void do_bluetooth(float *base_dist, struct gps_packet *gps_pkt) {
 			if (streaming &&
 				((float)(clock() - stream_start)/CLOCKS_PER_SEC) > 1.0) {
 				stream_start = clock();
-				sprintf(bluetooth_msg, "$D%d\n", dist);
+				sprintf(bluetooth_msg, "$D%0.0f\n", dist);
 				printf("Streaming data: %s", bluetooth_msg);
 				sendstring_bluetooth(bluetooth_msg);
 			}
