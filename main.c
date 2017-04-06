@@ -22,7 +22,9 @@
 #define SECONDS_THRESHOLD		5
 
 int dist_streaming = FALSE;
-int count_streaming = FALSE;
+int car_cnt_streaming = FALSE;
+int shorter_dist = FALSE;
+int car_count = 0;
 clock_t stream_start;
 clock_t delta;
 
@@ -31,25 +33,26 @@ static void do_bluetooth(float *base_dist, struct gps_packet *gps_pkt) {
 	char bluetooth_msg[50];
 	char char_received = get_char();
 	float dist = read_dist();
-	int car_count = 0, shortest_dist = 0;
 	int received_command = TRUE;
 
 	switch (char_received) {
 		case 'D':
 			dist_streaming = TRUE;
+			car_cnt_streaming = FALSE;
 			stream_start = clock();
 			sprintf(bluetooth_msg, "$D%0.0f\n", dist);
 			sendstring_bluetooth(bluetooth_msg);
 			break;
 
 		case 'O':
-			count_streaming = TRUE;
+			car_cnt_streaming = TRUE;
 			dist_streaming = FALSE;
 			stream_start = clock();
+			break;
 
 		case 'C':
 			dist_streaming = FALSE;
-			count_streaming = FALSE;
+			car_cnt_streaming = FALSE;
 			*base_dist = read_dist();
 			sprintf(bluetooth_msg, "$C%d\n", (int)*base_dist);
 			sendstring_bluetooth(bluetooth_msg);
@@ -57,7 +60,7 @@ static void do_bluetooth(float *base_dist, struct gps_packet *gps_pkt) {
 
 		case 'S':
 			dist_streaming = FALSE;
-			count_streaming = FALSE;
+			car_cnt_streaming = FALSE;
 			update_gps_data(gps_pkt);
 			sprintf(bluetooth_msg, "$S%0.0f,Connected,%d,%s,%s\n",
 				dist, (int)*base_dist, gps_pkt->latitude, gps_pkt->longitude);
@@ -65,8 +68,9 @@ static void do_bluetooth(float *base_dist, struct gps_packet *gps_pkt) {
 			break;
 
 		case 'X':
+			car_count = 0;
 			dist_streaming = FALSE;
-			count_streaming = FALSE;
+			car_cnt_streaming = FALSE;
 			break;
 
 		default:
@@ -76,34 +80,25 @@ static void do_bluetooth(float *base_dist, struct gps_packet *gps_pkt) {
 				((float)(clock() - stream_start)/CLOCKS_PER_SEC) > 1.0) {
 				stream_start = clock();
 				sprintf(bluetooth_msg, "$D%0.0f\n", dist);
-				printf("dist_streaming data: %s", bluetooth_msg);
+				printf("Sending distance reading: %s", bluetooth_msg);
 				sendstring_bluetooth(bluetooth_msg);
 			}
 
-			else if (count_streaming) {
-				/*
-				* Check if the distance we're reading got shorter
-				* i.e. a car is passing
-				*/
+			else if (car_cnt_streaming) {
 				if (*base_dist - dist >= CAR_DETECTION_THRESHOLD) {
-					shorter_dist = 1;
+					shorter_dist = TRUE;
 				}
-
-				/*
-				* Otherwise check if a car was passing and is done
-				* passing
-				* i.e. distance returned to base_dist
-				*/
-				else if (abs(*base_dist - dist) <= 10 && shortest_dist == 1) {
-					shortest_dist = 0;
+				else if (abs(*base_dist - dist) <= 10 && shorter_dist == TRUE) {
+					shorter_dist = FALSE;
 					car_count++;
 				}
-				/* Calculate number of seconds we have been reading for */
+
 				delta = (clock() - stream_start)/CLOCKS_PER_SEC;
 
 				/* Is it time to send data yet? */
 				if (delta >= SECONDS_THRESHOLD) {
 					sprintf(bluetooth_msg, "$%d\n", car_count);
+					printf("Sending car count: %s", bluetooth_msg);
 					sendstring_bluetooth(bluetooth_msg);
 					car_count = 0;
 					stream_start = clock();
