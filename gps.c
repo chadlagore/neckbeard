@@ -120,6 +120,20 @@ void parse_packet(struct gps_packet *pkt) {
     pkt->longitude[3] = '.';
     pkt->longitude[4] = upper;
     pkt->longitude[5] = lower;
+
+	double latitude_deg, latitude_min, longitude_deg, longitude_min;
+
+    latitude_min = modf(atof(pkt->latitude), &latitude_deg);
+    longitude_min = modf(atof(pkt->longitude), &longitude_deg);
+
+    latitude_min = latitude_min*100.0/60.0;
+    longitude_min = longitude_min*100.0/60.0;
+
+	pkt->latitude_float = latitude_deg + latitude_min;
+	pkt->longitude_float = longitude_deg + longitude_min;
+
+	sprintf(pkt->latitude, "%f", pkt->latitude_float);
+	sprintf(pkt->longitude, "%f", pkt->longitude_float);
 }
 
 

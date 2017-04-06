@@ -34,6 +34,8 @@ struct gps_packet {
     char *EW_indicator;
     char *satelites_used;
     char *checksum;
+    float latitude_float;
+    float longitude_float;
 };
 
 void init_gps(void);
