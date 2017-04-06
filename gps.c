@@ -131,6 +131,9 @@ void parse_packet(struct gps_packet *pkt) {
 
 	pkt->latitude_float = latitude_deg + latitude_min;
 	pkt->longitude_float = longitude_deg + longitude_min;
+
+	sprintf(pkt->latitude, "%f", pkt->latitude_float);
+	sprintf(pkt->longitude, "%f", pkt->longitude_float);
 }
 
 
